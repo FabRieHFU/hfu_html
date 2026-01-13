@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFU Buddy – Roadmap</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:Arial,sans-serif;
+            background:#E7DBB5;
+            display:flex;justify-content:center;align-items:center;
+            min-height:100vh;
+            position:relative;
+        }
+        body::before{
+            content:"";
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-image:url('Hintergrund.png');
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+            opacity:0.3;
+            z-index:0;
+        }
+        .phone{
+            width:100%;max-width:375px;
+            height:100vh;max-height:667px;
+            background:transparent;
+            display:flex;flex-direction:column;
+            box-shadow:0 4px 6px rgba(0,0,0,0.1);
+            position:relative;
+            z-index:1;
+        }
+
+        .top-bar{
+            position:relative;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:16px 16px;
+            min-height:56px;
+            border-bottom:1px solid #D2C79C;
+            background:rgba(231, 219, 181, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .back-icon{
+            position:absolute;
+            left:16px;
+            height:20px;
+            width:auto;
+            cursor:pointer;
+        }
+        .top-title{
+            font-weight:bold;
+            font-size:22px;
+            color:#4A7856;
+        }
+        .notification-icon{
+            position:absolute;
+            right:20px;
+            top:50%;
+            transform:translateY(-50%);
+            height:28px;
+            width:auto;
+            cursor:pointer;
+            border-radius:6px;
+            transition:all 0.2s ease;
+        }
+        .notification-icon:hover{
+            transform:translateY(-50%) scale(1.1);
+            background:rgba(47, 127, 81, 0.1);
+        }
+
+        .content{
+            flex:1;
+            padding:0;
+            overflow:hidden;
+            position:relative;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* Raumplaner-spezifisches CSS */
+        .burger{
+            position:absolute;
+            top:10px;
+            left:10px;
+            z-index:10;
+        }
+        .burger-btn{
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:4px;
+        }
+        .burger-btn img{
+            height:24px;
+            width:auto;
+        }
+
+        .threedot{
+            position:absolute;
+            top:50%;
+            right:10px;
+            transform:translateY(-50%);
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            z-index:10;
+        }
+        .threedot button{
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:0;
+        }
+        .threedot button img{
+            height:20px;
+            width:auto;
+        }
+
+        .plan{
+            flex:1;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            overflow:hidden;
+        }
+        .plan-image{
+            max-width:100%;
+            max-height:100%;
+            object-fit:contain;
+        }
+
+        .bottom-bar{
+            height:75px;
+            background:rgba(231, 219, 181, 0.75);
+            backdrop-filter: blur(10px);
+            display:flex;
+            justify-content:space-evenly;
+            align-items:center;
+            border-top:1px solid #D2C79C;
+            padding:12px 0;
+        }
+        .bottom-bar a{ 
+            text-decoration:none;
+            padding:8px;
+            border-radius:8px;
+            transition:all 0.2s ease;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .bottom-bar a:hover{
+            background:rgba(47, 127, 81, 0.1);
+            transform:scale(1.1);
+        }
+        .nav-icon{ height:36px;width:auto; }
+
+        @media(max-width:600px){
+            .phone{max-width:100%;height:100vh;max-height:none;}
+        }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="top-bar">
+            <a href="index.html">
+                <img src="gback.png" alt="Zurück" class="back-icon">
+            </a>
+            <div class="top-title">Roadmap</div>
+            <a href="forum_benachrichtigungen.html">
+                <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+            </a>
+        </div>
+
+        <div class="content">
+            <div class="burger">
+                <button class="burger-btn" aria-label="Menü öffnen" id="burgerBtn">
+                    <img src="icon_arrows.png" alt="Menü">
+                </button>
+            </div>
+
+            <div class="threedot">
+                <button data-src="plan.png" class="selected" aria-label="Erdgeschoss">
+                    <img src="threedot_1.png" alt="EG">
+                </button>
+                <button data-src="plan_1.png" aria-label="1. OG">
+                    <img src="threedot_0.png" alt="1. OG">
+                </button>
+                <button data-src="plan_2.png" aria-label="2. OG">
+                    <img src="threedot_0.png" alt="2. OG">
+                </button>
+            </div>
+
+            <main class="plan">
+                <img id="mainPlan" src="plan.png" alt="Raumplan" class="plan-image">
+            </main>
+        </div>
+
+        <div class="bottom-bar">
+            <a href="einstellungen.html">
+                <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+            </a>
+            <a href="index.html">
+                <img src="ghome.png" alt="Home" class="nav-icon">
+            </a>
+            <a href="forum_merken.html">
+                <img src="gmerken.png" alt="Merken" class="nav-icon">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var mainPlan = document.getElementById('mainPlan');
+            var buttons = document.querySelectorAll('.threedot button');
+
+            buttons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var src = btn.getAttribute('data-src');
+                    if (src && mainPlan) {
+                        mainPlan.setAttribute('src', src);
+                    }
+                    buttons.forEach(function (b) { b.classList.remove('selected'); });
+                    btn.classList.add('selected');
+                    buttons.forEach(function (b) {
+                        var img = b.querySelector('img');
+                        img.setAttribute('src', b.classList.contains('selected') ? 'threedot_1.png' : 'threedot_0.png');
+                    });
+                });
+            });
+        })();
+        
+        // Benachrichtigungs-Icon aktualisieren
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('hasNotifications');
+            if(saved === 'true') {
+                const icon = document.querySelector('.notification-icon');
+                if(icon) icon.src = 'punkt.png';
+            }
+        });
+    </script>
+</body>
+</html>

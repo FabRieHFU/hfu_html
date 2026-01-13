@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HFU Buddy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #E7DBB5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 375px;
+      height: 100vh;
+      max-height: 667px;
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Splash */
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: #4A7856;
+      font-size: clamp(20px, 5vw, 24px);
+      font-weight: bold;
+      background: rgba(231, 219, 181, 0.85);
+    }
+
+    /* Home */
+    .header-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-title{
+      font-weight:bold;
+      font-size:22px;
+      color:#4A7856;
+    }
+    
+    .notification-icon{
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      height:28px;
+      width:auto;
+      cursor:pointer;
+      border-radius:6px;
+      transition:all 0.2s ease;
+    }
+    
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    
+    .menu-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+      overflow-y: auto;
+    }
+    
+    .menu-item {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #D2C79C;
+      border-radius: 12px;
+      color: #4A7856;
+      font-weight: bold;
+      font-size: clamp(16px, 4.5vw, 20px);
+      cursor: default;
+      text-decoration: none;
+      background: rgba(245, 240, 220, 0.75);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      padding: 16px;
+      backdrop-filter: blur(5px);
+    }
+    
+    .menu-item.clickable {
+      cursor: pointer;
+    }
+    
+    .menu-item.clickable:hover {
+      background: rgba(237, 229, 202, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Reorder Mode */
+    body.reorder-mode .menu-item {
+      cursor: grab;
+    }
+    
+    body.reorder-mode .menu-item:active {
+      cursor: grabbing;
+    }
+    
+    body.reorder-mode .menu-item.dragging {
+      opacity: 0.5;
+      transform: scale(1.02);
+    }
+    
+    body.reorder-mode .menu-item.drag-over {
+      border: 2px dashed #4A7856;
+      background: rgba(74, 120, 86, 0.15);
+    }
+    
+    /* Hinweis-Banner im Reorder-Modus */
+    .reorder-banner {
+      display: none;
+      background: rgba(74, 120, 86, 0.9);
+      color: #E7DBB5;
+      padding: 12px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      border-bottom: 1px solid #D2C79C;
+    }
+    
+    body.reorder-mode .reorder-banner {
+      display: block;
+    }
+
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;
+      justify-content:space-evenly;
+      align-items:center;
+      color:#2F7F51;
+      font-size:16px;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    
+    .bottom-bar a{ 
+      text-decoration:none;
+      padding:8px;
+      border-radius:8px;
+      transition:all 0.2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+
+    .nav-icon{
+      height:36px;
+      width:auto;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .phone {
+        max-width: 100%;
+        height: 100vh;
+        max-height: none;
+      }
+      
+      body {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Splash / Lade-Screen -->
+  <div id="splash" class="center">
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <div style="color:#2F7F51; font-size:32px; font-weight:bold; margin-bottom:16px;">
+        HFU<br>Buddy
+      </div>
+    </div>
+  </div>
+
+  <!-- Home-Screen -->
+  <div id="home" class="phone" style="display:none;">
+    
+    <div class="reorder-banner">
+      🔄 Ziehe die Kacheln, um sie neu anzuordnen
+    </div>
+    
+    <div class="header-bar">
+      <div class="header-title">HFU Buddy</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="menu-list" id="menuList">
+      <!-- Kacheln werden dynamisch geladen -->
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+  const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+
+  if (!hasSeenSplash) {
+    // erstes Mal: Splash zeigen
+    setTimeout(function () {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('home').style.display = 'flex';
+      sessionStorage.setItem('hasSeenSplash', 'true');
+    }, 5000);
+  } else {
+    // später: direkt Home
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('home').style.display = 'flex';
+  }
+  
+  // Benachrichtigungs-Icon aktualisieren
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('hasNotifications');
+    if(saved === 'true') {
+      const icon = document.querySelector('.notification-icon');
+      if(icon) icon.src = 'punkt.png';
+    }
+    
+    // Menü-Kacheln laden
+    loadMenuItems();
+    
+    // Reorder-Modus prüfen und aktivieren
+    checkReorderMode();
+  });
+  
+  function checkReorderMode() {
+    const isReorderMode = localStorage.getItem('reorderMode') === 'true';
+    if(isReorderMode) {
+      document.body.classList.add('reorder-mode');
+      initDragAndDrop();
+    } else {
+      document.body.classList.remove('reorder-mode');
+    }
+  }
+  
+  // Alle 500ms prüfen, ob sich der Modus geändert hat
+  setInterval(() => {
+    const isReorderMode = localStorage.getItem('reorderMode') === 'true';
+    const hasClass = document.body.classList.contains('reorder-mode');
+    
+    if(isReorderMode && !hasClass) {
+      document.body.classList.add('reorder-mode');
+      initDragAndDrop();
+    } else if(!isReorderMode && hasClass) {
+      document.body.classList.remove('reorder-mode');
+      // Drag-Listener werden beim nächsten dragstart automatisch ignoriert
+    }
+  }, 500);
+  
+  // Standard-Menü-Items
+  const defaultMenuItems = [
+    { id: 'forum', text: 'Forum', link: 'forum.html', isLink: true },
+    { id: 'faecher', text: 'Fächer', link: null, isLink: false },
+    { id: 'laester', text: 'Läster Eck', link: null, isLink: false },
+    { id: 'seelsorge', text: 'Seelsorge', link: null, isLink: false },
+    { id: 'tipps', text: 'Tipps', link: null, isLink: false },
+    { id: 'roadmap', text: 'Roadmap', link: 'index_copy.html', isLink: true }
+  ];
+  
+  function loadMenuItems() {
+    const menuList = document.getElementById('menuList');
+    menuList.innerHTML = '';
+    
+    // Gespeicherte Reihenfolge laden oder Standard verwenden
+    let menuItems = defaultMenuItems;
+    const savedOrder = localStorage.getItem('menuOrder');
+    
+    if(savedOrder) {
+      try {
+        const orderIds = JSON.parse(savedOrder);
+        // Reihenfolge anhand der gespeicherten IDs wiederherstellen
+        menuItems = orderIds.map(id => defaultMenuItems.find(item => item.id === id)).filter(Boolean);
+        // Falls neue Items hinzugefügt wurden, die noch nicht gespeichert sind
+        defaultMenuItems.forEach(item => {
+          if(!menuItems.find(m => m.id === item.id)) {
+            menuItems.push(item);
+          }
+        });
+      } catch(e) {
+        console.error('Fehler beim Laden der Menü-Reihenfolge:', e);
+      }
+    }
+    
+    // Kacheln rendern
+    menuItems.forEach(item => {
+      const element = item.isLink 
+        ? document.createElement('a')
+        : document.createElement('div');
+      
+      element.className = `menu-item ${item.id}`;
+      if(item.isLink) {
+        element.classList.add('clickable');
+      }
+      element.textContent = item.text;
+      element.draggable = false; // Standardmäßig nicht ziehbar
+      element.dataset.itemId = item.id;
+      
+      if(item.isLink) {
+        element.href = item.link;
+        // Verhindere Navigation im Reorder-Modus
+        element.addEventListener('click', (e) => {
+          if(document.body.classList.contains('reorder-mode')) {
+            e.preventDefault();
+          }
+        });
+      }
+      
+      menuList.appendChild(element);
+    });
+  }
+  
+  function saveMenuOrder() {
+    const menuList = document.getElementById('menuList');
+    const items = Array.from(menuList.children);
+    const orderIds = items.map(item => item.dataset.itemId);
+    localStorage.setItem('menuOrder', JSON.stringify(orderIds));
+  }
+  
+  let draggedElement = null;
+  let dragListenersInitialized = false;
+  
+  function initDragAndDrop() {
+    if(dragListenersInitialized) return; // Nur einmal initialisieren
+    dragListenersInitialized = true;
+    
+    const menuList = document.getElementById('menuList');
+    
+    // Draggable für alle Items aktivieren
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.draggable = true;
+    });
+    
+    menuList.addEventListener('dragstart', (e) => {
+      if(!document.body.classList.contains('reorder-mode')) return;
+      
+      if(e.target.classList.contains('menu-item')) {
+        draggedElement = e.target;
+        e.target.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      }
+    });
+    
+    menuList.addEventListener('dragend', (e) => {
+      if(!document.body.classList.contains('reorder-mode')) return;
+      
+      if(e.target.classList.contains('menu-item')) {
+        e.target.classList.remove('dragging');
+        // Alle drag-over Klassen entfernen
+        document.querySelectorAll('.menu-item').forEach(item => {
+          item.classList.remove('drag-over');
+        });
+        draggedElement = null;
+        // Reihenfolge speichern
+        saveMenuOrder();
+      }
+    });
+    
+    menuList.addEventListener('dragover', (e) => {
+      if(!document.body.classList.contains('reorder-mode')) return;
+      
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      
+      const afterElement = getDragAfterElement(menuList, e.clientY);
+      const dragging = document.querySelector('.dragging');
+      
+      // Alle drag-over entfernen
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('drag-over');
+      });
+      
+      if(afterElement == null) {
+        if(dragging) {
+          menuList.appendChild(dragging);
+        }
+      } else {
+        afterElement.classList.add('drag-over');
+        if(dragging) {
+          menuList.insertBefore(dragging, afterElement);
+        }
+      }
+    });
+    
+    menuList.addEventListener('drop', (e) => {
+      if(!document.body.classList.contains('reorder-mode')) return;
+      
+      e.preventDefault();
+      // drag-over entfernen
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('drag-over');
+      });
+    });
+  }
+  
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.menu-item:not(.dragging)')];
+    
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      
+      if(offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kommentare</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:Arial,sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:rgba(231, 219, 181, 0.95);
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;
+      z-index:1;
+    }
+
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    .back-icon{
+      position:absolute;
+      left:16px;
+      height:20px;
+      width:auto;
+      cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;
+      font-size:22px;
+      color:#2F7F51;
+    }
+    .notification-icon{
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      height:28px;
+      width:auto;
+      cursor:pointer;
+      border-radius:6px;
+      transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+
+    .content{
+      flex:1;padding:12px;overflow-y:auto;
+    }
+    .comment-box{
+      background:rgba(245, 238, 208, 0.8);
+      backdrop-filter: blur(5px);
+      padding:12px;
+      border-radius:6px;
+      margin-bottom:10px;
+      font-size:15px;
+      color:#4A7856;
+      line-height:1.6;
+    }
+    .author{
+      font-weight:bold;
+      color:#4A7856;
+      margin-bottom:6px;
+      font-size:16px;
+    }
+    .comment-actions{
+      margin-top:8px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .reply-btn{
+      font-size:13px;
+      color:#4A7856;
+      cursor:pointer;
+      background:none;
+      border:none;
+      text-decoration:underline;
+      padding:0;
+      font-weight:bold;
+    }
+    .reply-btn:hover{
+      color:#5A8866;
+    }
+    .replies{
+      margin-left:20px;
+      margin-top:8px;
+      border-left:2px solid rgba(74, 120, 86, 0.3);
+      padding-left:12px;
+    }
+    .reply-box{
+      background:rgba(235, 228, 198, 0.8);
+      backdrop-filter: blur(5px);
+      padding:10px;
+      border-radius:6px;
+      margin-bottom:8px;
+      font-size:14px;
+      color:#4A7856;
+      line-height:1.5;
+    }
+    .reply-input-area{
+      margin-top:8px;
+      display:none;
+      flex-direction:column;
+      gap:6px;
+    }
+    .reply-input-area.active{
+      display:flex;
+    }
+    .reply-input-area input,
+    .reply-input-area textarea{
+      border:1px solid #D2C79C;
+      border-radius:6px;
+      padding:6px;
+      font-size:14px;
+      font-family:Arial,sans-serif;
+      color:#4A7856;
+    }
+    .reply-input-area textarea{
+      resize:vertical;
+      min-height:40px;
+    }
+    .reply-send-btn{
+      align-self:flex-end;
+      border:none;
+      border-radius:12px;
+      padding:4px 12px;
+      background:#4A7856;
+      color:#E7DBB5;
+      font-size:14px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    .cancel-reply-btn{
+      align-self:flex-end;
+      border:none;
+      border-radius:12px;
+      padding:4px 12px;
+      background:#999;
+      color:#fff;
+      font-size:14px;
+      cursor:pointer;
+      margin-left:6px;
+    }
+    .input-area{
+      padding:10px 12px;
+      border-top:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .input-area input,
+    .input-area textarea{
+      border:1px solid #D2C79C;
+      border-radius:6px;
+      padding:8px;
+      font-size:15px;
+      font-family:Arial,sans-serif;
+      color:#4A7856;
+    }
+    textarea{resize:vertical;min-height:50px;}
+    .send-btn{
+      align-self:flex-end;
+      border:none;
+      border-radius:16px;
+      padding:6px 14px;
+      background:#4A7856;
+      color:#E7DBB5;
+      font-size:15px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;
+      justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;
+      padding:8px;
+      border-radius:8px;
+      transition:all 0.2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{ height:36px;width:auto; }
+
+    @media(max-width:600px){
+      .phone{max-width:100%;height:100vh;max-height:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <a href="forum.html">
+        <img src="gback.png" alt="Zurück" class="back-icon">
+      </a>
+      <div class="top-title">Kommentare</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div id="comments" class="content">
+      <!-- Kommentare werden hier dynamisch geladen -->
+    </div>
+
+    <div class="input-area">
+      <input id="nameInput" type="text" placeholder="Name (optional)">
+      <textarea id="commentInput" placeholder="Kommentar schreiben..."></textarea>
+      <button class="send-btn" id="sendBtn">Senden</button>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const commentsContainer = document.getElementById('comments');
+    const nameInput = document.getElementById('nameInput');
+    const commentInput = document.getElementById('commentInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    let commentIdCounter = 0;
+    
+    // Kommentare beim Laden der Seite anzeigen
+    function loadComments() {
+      const saved = localStorage.getItem('comments');
+      if(saved) {
+        try {
+          const comments = JSON.parse(saved);
+          comments.forEach(comment => {
+            renderComment(comment, commentsContainer);
+          });
+          // ID-Counter aktualisieren
+          commentIdCounter = Math.max(...comments.map(c => getMaxId(c)), 0) + 1;
+        } catch(e) {
+          // Fallback für alte Kommentare ohne IDs
+          initializeDefaultComments();
+        }
+      } else {
+        // Erste Default-Kommentare
+        initializeDefaultComments();
+      }
+    }
+    
+    function getMaxId(comment) {
+      let maxId = comment.id || 0;
+      if(comment.replies && comment.replies.length > 0) {
+        comment.replies.forEach(reply => {
+          const replyMaxId = getMaxId(reply);
+          if(replyMaxId > maxId) maxId = replyMaxId;
+        });
+      }
+      return maxId;
+    }
+    
+    function initializeDefaultComments() {
+      const defaultComments = [
+        { id: 0, author: 'User1', text: 'Krasses Gedicht, vor allem die Atmosphäre!', replies: [] },
+        { id: 1, author: 'User2', text: 'Mussten wir in der Schule auswendig lernen.', replies: [] }
+      ];
+      localStorage.setItem('comments', JSON.stringify(defaultComments));
+      defaultComments.forEach(comment => {
+        renderComment(comment, commentsContainer);
+      });
+      commentIdCounter = 2;
+    }
+    
+    function renderComment(comment, container, isReply = false) {
+      const box = document.createElement('div');
+      box.className = isReply ? 'reply-box' : 'comment-box';
+      box.dataset.commentId = comment.id;
+      
+      box.innerHTML = `
+        <div class="author">${comment.author}</div>
+        <div>${comment.text}</div>
+        <div class="comment-actions">
+          <button class="reply-btn" onclick="toggleReplyInput(${comment.id})">Antworten</button>
+        </div>
+        <div class="reply-input-area" id="reply-input-${comment.id}">
+          <input type="text" placeholder="Name (optional)" class="reply-name-input">
+          <textarea placeholder="Antwort schreiben..." class="reply-text-input"></textarea>
+          <div>
+            <button class="reply-send-btn" onclick="sendReply(${comment.id})">Senden</button>
+            <button class="cancel-reply-btn" onclick="toggleReplyInput(${comment.id})">Abbrechen</button>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(box);
+      
+      // Antworten rendern
+      if(comment.replies && comment.replies.length > 0) {
+        const repliesContainer = document.createElement('div');
+        repliesContainer.className = 'replies';
+        repliesContainer.dataset.parentId = comment.id;
+        comment.replies.forEach(reply => {
+          renderComment(reply, repliesContainer, true);
+        });
+        box.appendChild(repliesContainer);
+      }
+    }
+    
+    function toggleReplyInput(commentId) {
+      const replyArea = document.getElementById(`reply-input-${commentId}`);
+      if(replyArea) {
+        replyArea.classList.toggle('active');
+      }
+    }
+    
+    function sendReply(parentId) {
+      const replyArea = document.getElementById(`reply-input-${parentId}`);
+      const nameInput = replyArea.querySelector('.reply-name-input');
+      const textInput = replyArea.querySelector('.reply-text-input');
+      
+      const name = nameInput.value.trim() || 'Anon';
+      const text = textInput.value.trim();
+      
+      if (!text) return;
+      
+      const newReply = {
+        id: commentIdCounter++,
+        author: name,
+        text: text,
+        replies: []
+      };
+      
+      // Kommentare aus localStorage laden
+      let comments = [];
+      const savedComments = localStorage.getItem('comments');
+      if(savedComments) {
+        try { comments = JSON.parse(savedComments); } catch(e) { comments = []; }
+      }
+      
+      // Antwort zum richtigen Parent hinzufügen
+      addReplyToComment(comments, parentId, newReply);
+      
+      // Speichern
+      localStorage.setItem('comments', JSON.stringify(comments));
+      
+      // UI aktualisieren
+      const parentBox = document.querySelector(`[data-comment-id="${parentId}"]`);
+      let repliesContainer = parentBox.querySelector(`.replies[data-parent-id="${parentId}"]`);
+      
+      if(!repliesContainer) {
+        repliesContainer = document.createElement('div');
+        repliesContainer.className = 'replies';
+        repliesContainer.dataset.parentId = parentId;
+        parentBox.appendChild(repliesContainer);
+      }
+      
+      renderComment(newReply, repliesContainer, true);
+      
+      // Input-Bereich schließen und leeren
+      nameInput.value = '';
+      textInput.value = '';
+      toggleReplyInput(parentId);
+      
+      // Benachrichtigung erstellen
+      createNotification(name, text, 'Antwort');
+    }
+    
+    function addReplyToComment(comments, parentId, reply) {
+      for(let comment of comments) {
+        if(comment.id === parentId) {
+          if(!comment.replies) comment.replies = [];
+          comment.replies.push(reply);
+          return true;
+        }
+        if(comment.replies && comment.replies.length > 0) {
+          if(addReplyToComment(comment.replies, parentId, reply)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    
+    function createNotification(author, text, type = 'Kommentar') {
+      let notifications = [];
+      const saved = localStorage.getItem('notifications');
+      if(saved) {
+        try { notifications = JSON.parse(saved); } catch(e) { notifications = []; }
+      }
+      
+      const notification = {
+        type: 'comment',
+        message: `Neuer ${type} zum Post`,
+        author: author,
+        text: text,
+        timestamp: new Date().toLocaleString('de-DE'),
+        link: 'forum_kommentare.html'
+      };
+      
+      notifications.push(notification);
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+      
+      // Header-Icon sofort auf aktiv setzen
+      localStorage.setItem('hasNotifications', 'true');
+      const icon = document.querySelector('.notification-icon');
+      if(icon) icon.src = 'punkt.png';
+    }
+    
+    // Kommentare beim Start laden
+    loadComments();
+
+    sendBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim() || 'Anon';
+      const text = commentInput.value.trim();
+      if (!text) return;
+
+      const newComment = {
+        id: commentIdCounter++,
+        author: name,
+        text: text,
+        replies: []
+      };
+      
+      renderComment(newComment, commentsContainer);
+      commentInput.value = '';
+      nameInput.value = '';
+      
+      // Kommentar dauerhaft speichern
+      let comments = [];
+      const savedComments = localStorage.getItem('comments');
+      if(savedComments) {
+        try { comments = JSON.parse(savedComments); } catch(e) { comments = []; }
+      }
+      comments.unshift(newComment);
+      localStorage.setItem('comments', JSON.stringify(comments));
+      
+      // Benachrichtigung erstellen
+      createNotification(name, text);
+      
+      // Seite neu laden um Reihenfolge zu korrigieren
+      location.reload();
+    });
+    
+    // Icon beim Laden aktualisieren
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png';
+      }
+    });
+  </script>
+</body>
+</html>

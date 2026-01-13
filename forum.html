@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HFU Buddy – Forum</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:Arial,sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:rgba(231, 219, 181, 0.95);
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;
+      z-index:1;
+    }
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    .back-icon{
+      position:absolute;
+      left:16px;
+      height:20px;
+      width:auto;
+      cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;
+      font-size:22px;
+      color:#2F7F51;
+    }
+    .notification-icon{
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      height:28px;
+      width:auto;
+      cursor:pointer;
+      border-radius:6px;
+      transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .content{
+      flex:1;padding:16px;overflow-y:auto;
+    }
+    .post{
+      margin-bottom:16px;
+      border:1px solid #D2C79C;
+      border-radius:8px;
+      padding:14px;
+      background:rgba(245, 240, 220, 0.75);
+      backdrop-filter: blur(5px);
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      position:relative;
+    }
+    .post-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:6px;
+    }
+    .post-title-area{
+      flex:1;
+    }
+    .post-title{
+      font-weight:bold;color:#2F5F3F;
+      font-size:19px;
+    }
+    .save-btn-top{
+      border:none;background:none;
+      cursor:pointer;
+      padding:4px;
+      transition:all 0.2s ease;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .save-btn-top:hover{
+      transform:scale(1.15);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .post-author{
+      font-size:14px;color:#4A6B51;margin-bottom:8px;
+    }
+    .post-text{
+      font-size:15px;line-height:1.6;
+      margin-bottom:12px;color:#2F5F3F;
+    }
+    .post-actions{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:4px;
+      padding-top:10px;
+      border-top:1px solid #E7DBB5;
+    }
+    .icon-btn{
+      border:none;background:none;
+      cursor:pointer;
+      padding:2px;
+      transition:all 0.2s ease;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .icon-btn:hover{
+      transform:scale(1.15);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .icon-small{
+      height:20px;width:auto;
+    }
+    .votes{
+      font-size:13px;color:#4A7856;
+      font-weight:bold;
+      min-width:20px;
+      text-align:center;
+      padding:0 2px;
+    }
+    .plus{
+      display:flex;justify-content:center;
+      margin:8px 0 12px;
+    }
+    .plus-circle{
+      width:48px;height:48px;border-radius:50%;
+      background:#4A7856;color:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      font-size:28px;cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+      transition:all 0.2s ease;
+    }
+    .plus-circle:hover{
+      background:#5A8866;
+      transform:scale(1.05);
+    }
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;
+      justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;
+      padding:8px;
+      border-radius:8px;
+      transition:all 0.2s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{ height:36px;width:auto; }
+    @media(max-width:600px){
+      .phone{max-width:100%;height:100vh;max-height:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <a href="index.html">
+        <img src="gback.png" alt="Zurück" class="back-icon">
+      </a>
+      <div class="top-title">Forum</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="content" id="posts-container">
+      <!-- Fester Beispiel-Post 1 -->
+      <div class="post" data-votes="0">
+        <div class="post-header">
+          <div class="post-title-area">
+            <div class="post-title">Erlkönig Teil 1</div>
+          </div>
+          <button class="icon-btn save-btn-top save-btn">
+            <img src="gmerken.png" alt="Merken" class="icon-small">
+          </button>
+        </div>
+        <div class="post-author">von Johann</div>
+        <div class="post-text">
+          Wer reitet so spät durch Nacht und Wind?<br>
+          Es ist der Vater mit seinem Kind;<br>
+          Er hat den Knaben wohl in dem Arm,<br>
+          Er fasst ihn sicher, er hält ihn warm.
+        </div>
+        <div class="post-actions">
+          <a class="icon-btn" href="forum_kommentare.html">
+            <img src="gkomm.png" alt="Kommentare" class="icon-small">
+          </a>
+          <button class="icon-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="icon-small">
+          </button>
+          <span class="votes">0</span>
+        </div>
+      </div>
+
+      <!-- Fester Beispiel-Post 2 -->
+      <div class="post" data-votes="0">
+        <div class="post-header">
+          <div class="post-title-area">
+            <div class="post-title">Erlkönig Teil 2</div>
+          </div>
+          <button class="icon-btn save-btn-top save-btn">
+            <img src="gmerken.png" alt="Merken" class="icon-small">
+          </button>
+        </div>
+        <div class="post-author">von Wolfgang </div>
+        <div class="post-text">
+          „Mein Sohn, was birgst du so bang dein Gesicht?“ –<br>
+          „Siehst, Vater, du den Erlkönig nicht?<br>
+          Den Erlenkönig mit Kron’ und Schweif?“ –<br>
+          „Mein Sohn, es ist ein Nebelstreif.“
+        </div>
+        <div class="post-actions">
+          <a class="icon-btn" href="forum_kommentare.html">
+            <img src="gkomm.png" alt="Kommentare" class="icon-small">
+          </a>
+          <button class="icon-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="icon-small">
+          </button>
+          <span class="votes">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus">
+      <a class="plus-circle" href="forum_posten.html">+</a>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('posts-container');
+
+    // neue Posts aus sessionStorage laden
+    function loadNewPosts() {
+      const raw = sessionStorage.getItem('newPosts');
+      if (!raw) return;
+
+      let newPosts = [];
+      try { newPosts = JSON.parse(raw); } catch(e){ return; }
+
+      newPosts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.dataset.votes = '0';
+        div.innerHTML = `
+          <div class="post-title">${p.title}</div>
+          <div class="post-author">von ${p.name}</div>
+          <div class="post-text">${p.text}</div>
+          <div class="post-actions">
+            <button class="icon-btn save-btn">
+              <img src="gmerken.png" alt="Merken" class="icon-small">
+            </button>
+            <a class="icon-btn" href="forum_kommentare.html">
+              <img src="gkomm.png" alt="Kommentare" class="icon-small">
+            </a>
+            <button class="icon-btn upvote-btn">
+              <img src="gup.png" alt="Upvote" class="icon-small">
+            </button>
+            <span class="votes">0</span>
+          </div>
+        `;
+        container.insertBefore(div, container.firstChild);
+      });
+    }
+
+    loadNewPosts();
+
+    // Upvotes
+    const posts = Array.from(container.querySelectorAll('.post'));
+    posts.forEach(post => {
+      const btn = post.querySelector('.upvote-btn');
+      const votesSpan = post.querySelector('.votes');
+      btn.addEventListener('click', () => {
+        let votes = parseInt(post.dataset.votes || '0', 10);
+        votes++;
+        post.dataset.votes = votes;
+        votesSpan.textContent = votes;
+        const sorted = posts.slice().sort(
+          (a,b)=>parseInt(b.dataset.votes||'0',10)-parseInt(a.dataset.votes||'0',10)
+        );
+        sorted.forEach(p=>container.appendChild(p));
+      });
+    });
+
+    // Merken
+    function savePostData(title, author, text){
+      let saved=[];
+      const raw=sessionStorage.getItem('savedPosts');
+      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} }
+      saved.push({title,author,text});
+      sessionStorage.setItem('savedPosts',JSON.stringify(saved));
+    }
+    container.querySelectorAll('.post').forEach(post=>{
+      const saveBtn=post.querySelector('.save-btn');
+      saveBtn.addEventListener('click',()=>{
+        const title=post.querySelector('.post-title').innerHTML;
+        const author=post.querySelector('.post-author').innerHTML;
+        const text=post.querySelector('.post-text').innerHTML;
+        savePostData(title,author,text);
+        alert('Post gespeichert (bis zum Refresh).');
+      });
+    });
+  </script>
+  
+  <script>
+    // Benachrichtigungs-Icon aktualisieren
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png';
+      }
+    });
+  </script>
+</body>
+</html>

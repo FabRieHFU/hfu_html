@@ -137,6 +137,9 @@
             max-width:100%;
             max-height:100%;
             object-fit:contain;
+            transition: transform 0.1s ease;
+            cursor: zoom-in;
+            user-select: none;
         }
 
         .bottom-bar{
@@ -301,7 +304,42 @@
                     var selectedDate = datePicker.value;
                     var isSpecialDate = selectedDate === '2026-01-13';
                     applyBsp(isSpecialDate);
+                    calendar.style.display = 'none';
                 });
+            }
+
+            var zoom = 1;
+            var translateX = 0;
+            var translateY = 0;
+            var isDragging = false;
+            var startX, startY;
+            if(mainPlan){
+                mainPlan.addEventListener('wheel', function(e){
+                    e.preventDefault();
+                    zoom += e.deltaY > 0 ? -0.1 : 0.1;
+                    zoom = Math.max(0.5, Math.min(3, zoom));
+                    updateTransform();
+                });
+                mainPlan.addEventListener('mousedown', function(e){
+                    isDragging = true;
+                    startX = e.clientX - translateX;
+                    startY = e.clientY - translateY;
+                    mainPlan.style.cursor = 'grabbing';
+                });
+                document.addEventListener('mousemove', function(e){
+                    if(isDragging){
+                        translateX = e.clientX - startX;
+                        translateY = e.clientY - startY;
+                        updateTransform();
+                    }
+                });
+                document.addEventListener('mouseup', function(){
+                    isDragging = false;
+                    mainPlan.style.cursor = 'zoom-in';
+                });
+            }
+            function updateTransform(){
+                mainPlan.style.transform = 'scale(' + zoom + ') translate(' + translateX + 'px, ' + translateY + 'px)';
             }
         })();
         

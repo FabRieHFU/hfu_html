@@ -232,7 +232,7 @@
             </main>
 
             <div id="calendar" class="calendar">
-                <input type="date" id="datePicker">
+                <input type="datetime-local" id="datePicker">
             </div>
         </div>
 
@@ -301,7 +301,8 @@
 
             if(datePicker){
                 datePicker.addEventListener('change', function(){
-                    var selectedDate = datePicker.value;
+                    var selectedDateTime = datePicker.value;
+                    var selectedDate = selectedDateTime.substring(0, 10); // Extract date part
                     var isSpecialDate = selectedDate === '2026-01-13';
                     applyBsp(isSpecialDate);
                     calendar.style.display = 'none';

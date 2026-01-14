@@ -225,6 +225,30 @@
         (function () {
             var mainPlan = document.getElementById('mainPlan');
             var buttons = document.querySelectorAll('.threedot button');
+            var burgerBtn = document.getElementById('burgerBtn');
+            var bspMap = {
+                'eg1.png': 'eg1_bsp.png',
+                'eg2.png': 'eg2_bsp.png',
+                'eg3.png': 'eg3_bsp.png'
+            };
+            var reverseMap = {};
+            Object.keys(bspMap).forEach(function(k){ reverseMap[bspMap[k]] = k; });
+
+            function applyBsp(enabled){
+                buttons.forEach(function(b){
+                    var src = b.getAttribute('data-src');
+                    if(enabled && bspMap[src]) b.setAttribute('data-src', bspMap[src]);
+                    if(!enabled && reverseMap[src]) b.setAttribute('data-src', reverseMap[src]);
+                });
+                // Aktualisiere das Hauptbild, falls der ausgewählte Button betroffen ist
+                var sel = document.querySelector('.threedot button.selected');
+                if(sel && mainPlan){
+                    var src = sel.getAttribute('data-src');
+                    if(src) mainPlan.setAttribute('src', src);
+                }
+                if(burgerBtn) burgerBtn.setAttribute('aria-pressed', !!enabled);
+                localStorage.setItem('useBsp', enabled ? 'true' : 'false');
+            }
 
             buttons.forEach(function (btn) {
                 btn.addEventListener('click', function () {
@@ -240,6 +264,19 @@
                     });
                 });
             });
+
+            if(burgerBtn){
+                burgerBtn.addEventListener('click', function(){
+                    var enabled = localStorage.getItem('useBsp') === 'true';
+                    applyBsp(!enabled);
+                });
+            }
+
+            // Beim Laden gespeicherten Zustand anwenden
+            (function initBspFromStorage(){
+                var saved = localStorage.getItem('useBsp') === 'true';
+                applyBsp(saved);
+            })();
         })();
         
         // Benachrichtigungs-Icon aktualisieren

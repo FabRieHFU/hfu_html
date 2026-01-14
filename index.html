@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HFU Buddy</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -13,7 +16,7 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inder', sans-serif;
       background-color: #E7DBB5;
       display: flex;
       justify-content: center;
@@ -57,7 +60,7 @@
       align-items: center;
       height: 100%;
       color: #4A7856;
-      font-size: clamp(20px, 5vw, 24px);
+      font-size: clamp(22px, 5vw, 26px);
       font-weight: bold;
       background: rgba(231, 219, 181, 0.85);
     }
@@ -77,7 +80,7 @@
     
     .header-title{
       font-weight:bold;
-      font-size:22px;
+      font-size:24px;
       color:#4A7856;
     }
     
@@ -86,7 +89,7 @@
       right:20px;
       top:50%;
       transform:translateY(-50%);
-      height:28px;
+      height:30px;
       width:auto;
       cursor:pointer;
       border-radius:6px;
@@ -116,7 +119,7 @@
       border-radius: 12px;
       color: #4A7856;
       font-weight: bold;
-      font-size: clamp(16px, 4.5vw, 20px);
+      font-size: clamp(18px, 4.5vw, 22px);
       cursor: default;
       text-decoration: none;
       background: rgba(245, 240, 220, 0.75);
@@ -162,7 +165,7 @@
       color: #E7DBB5;
       padding: 12px;
       text-align: center;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
       border-bottom: 1px solid #D2C79C;
     }
@@ -179,7 +182,7 @@
       justify-content:space-evenly;
       align-items:center;
       color:#2F7F51;
-      font-size:16px;
+      font-size:17px;
       border-top:1px solid #D2C79C;
       padding:12px 0;
     }
@@ -220,7 +223,7 @@
   <!-- Splash / Lade-Screen -->
   <div id="splash" class="center">
     <div style="display:flex; flex-direction:column; align-items:center;">
-      <div style="color:#2F7F51; font-size:32px; font-weight:bold; margin-bottom:16px;">
+      <div style="color:#2F7F51; font-size:36px; font-weight:bold; margin-bottom:16px;">
         HFU<br>Buddy
       </div>
     </div>
@@ -315,11 +318,11 @@
   // Standard-Menü-Items
   const defaultMenuItems = [
     { id: 'forum', text: 'Forum', link: 'forum.html', isLink: true },
-    { id: 'faecher', text: 'Fächer', link: null, isLink: false },
-    { id: 'laester', text: 'Läster Eck', link: null, isLink: false },
-    { id: 'seelsorge', text: 'Seelsorge', link: null, isLink: false },
-    { id: 'tipps', text: 'Tipps', link: null, isLink: false },
-    { id: 'raumplaner', text: 'Raumplaner', link: 'index_copy.html', isLink: true }
+    { id: 'faecher', text: 'Fächer', link: 'faecher.html', isLink: true },
+    { id: 'tipps', text: 'Tipps', link: 'tipps.html', isLink: true },
+    { id: 'seelsorge', text: 'Seelsorge', link: 'seelsorge.html', isLink: true },
+    { id: 'laester', text: 'Lästerecke', link: 'laesterecke.html', isLink: true },
+    { id: 'roadmap', text: 'Raumplaner', link: 'index_copy.html', isLink: true }
   ];
   
   function loadMenuItems() {

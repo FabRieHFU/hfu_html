@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gespeichert</title>
+  <title>Gemerkte Posts</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Inder', sans-serif;
       background:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
       min-height:100vh;
@@ -150,9 +153,7 @@
 <body>
   <div class="phone">
     <div class="top-bar">
-      <a href="forum.html">
-        <img src="gback.png" alt="Zurück" class="back-icon">
-      </a>
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="history.back()" style="cursor:pointer;">
       <div class="top-title">Gespeichert</div>
       <a href="forum_benachrichtigungen.html">
         <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
@@ -198,11 +199,22 @@
           saved.forEach(p => {
             const div = document.createElement('div');
             div.className = 'post';
+            div.style.cursor = 'pointer';
             div.innerHTML = `
               <div class="post-title">${p.title}</div>
               <div class="post-author">${p.author}</div>
               <div class="post-text">${p.text}</div>
             `;
+            
+            // Klick-Event: Gehe zu den Kommentaren dieses Posts
+            if(p.postId) {
+              div.addEventListener('click', () => {
+                localStorage.setItem('currentPostId', p.postId);
+                sessionStorage.setItem('forumReferrer', 'forum.html');
+                window.location.href = 'forum_kommentare.html';
+              });
+            }
+            
             container.appendChild(div);
           });
         }

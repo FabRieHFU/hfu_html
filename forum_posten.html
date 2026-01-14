@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neuer Post</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Inder', sans-serif;
       background-color:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
       min-height:100vh;
@@ -161,9 +164,7 @@
 <body>
   <div class="phone">
     <div class="top-bar">
-      <a href="forum.html">
-        <img src="gback.png" alt="Zurück" class="back-icon">
-      </a>
+      <img src="gback.png" alt="Zurück" class="back-icon" id="backBtn" style="cursor:pointer;">
       <div class="top-title">Neuer Post</div>
       <a href="forum_benachrichtigungen.html">
         <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
@@ -221,15 +222,26 @@
         return;
       }
 
+      // Welche Seite hat uns hierher geschickt?
+      const sourcePage = localStorage.getItem('postSourcePage') || 'forum';
+
       let newPosts = [];
       const raw = sessionStorage.getItem('newPosts');
       if (raw) {
         try { newPosts = JSON.parse(raw); } catch(e){ newPosts = []; }
       }
 
-      newPosts.push({ title, name, text });
+      newPosts.push({ title, name, text, sourcePage });
       sessionStorage.setItem('newPosts', JSON.stringify(newPosts));
-      window.location.href = 'forum.html';
+      
+      // Zurück zur richtigen Seite
+      window.location.href = sourcePage + '.html';
+    });
+
+    // Zurück-Button zur richtigen Forum-Seite
+    document.getElementById('backBtn').addEventListener('click', () => {
+      const referrer = sessionStorage.getItem('forumReferrer') || 'forum.html';
+      window.location.href = referrer;
     });
     
     // Benachrichtigungs-Icon aktualisieren

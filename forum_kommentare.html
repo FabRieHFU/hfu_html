@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kommentare</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Inder', sans-serif;
       background:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
       min-height:100vh;
@@ -58,7 +61,7 @@
     }
     .top-title{
       font-weight:bold;
-      font-size:22px;
+      font-size:24px;
       color:#2F7F51;
     }
     .notification-icon{
@@ -66,7 +69,7 @@
       right:20px;
       top:50%;
       transform:translateY(-50%);
-      height:28px;
+      height:30px;
       width:auto;
       cursor:pointer;
       border-radius:6px;
@@ -86,7 +89,7 @@
       padding:12px;
       border-radius:6px;
       margin-bottom:10px;
-      font-size:15px;
+      font-size:16px;
       color:#4A7856;
       line-height:1.6;
     }
@@ -94,7 +97,7 @@
       font-weight:bold;
       color:#4A7856;
       margin-bottom:6px;
-      font-size:16px;
+      font-size:17px;
     }
     .comment-actions{
       margin-top:8px;
@@ -103,7 +106,7 @@
       align-items:center;
     }
     .reply-btn{
-      font-size:13px;
+      font-size:14px;
       color:#4A7856;
       cursor:pointer;
       background:none;
@@ -127,7 +130,7 @@
       padding:10px;
       border-radius:6px;
       margin-bottom:8px;
-      font-size:14px;
+      font-size:15px;
       color:#4A7856;
       line-height:1.5;
     }
@@ -145,7 +148,7 @@
       border:1px solid #D2C79C;
       border-radius:6px;
       padding:6px;
-      font-size:14px;
+      font-size:15px;
       font-family:Arial,sans-serif;
       color:#4A7856;
     }
@@ -160,7 +163,7 @@
       padding:4px 12px;
       background:#4A7856;
       color:#E7DBB5;
-      font-size:14px;
+      font-size:15px;
       cursor:pointer;
       font-weight:bold;
     }
@@ -171,7 +174,7 @@
       padding:4px 12px;
       background:#999;
       color:#fff;
-      font-size:14px;
+      font-size:15px;
       cursor:pointer;
       margin-left:6px;
     }
@@ -189,7 +192,7 @@
       border:1px solid #D2C79C;
       border-radius:6px;
       padding:8px;
-      font-size:15px;
+      font-size:16px;
       font-family:Arial,sans-serif;
       color:#4A7856;
     }
@@ -201,7 +204,7 @@
       padding:6px 14px;
       background:#4A7856;
       color:#E7DBB5;
-      font-size:15px;
+      font-size:16px;
       cursor:pointer;
       font-weight:bold;
     }
@@ -239,9 +242,7 @@
 <body>
   <div class="phone">
     <div class="top-bar">
-      <a href="forum.html">
-        <img src="gback.png" alt="Zurück" class="back-icon">
-      </a>
+      <img src="gback.png" alt="Zurück" class="back-icon" id="backBtn" style="cursor:pointer;">
       <div class="top-title">Kommentare</div>
       <a href="forum_benachrichtigungen.html">
         <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
@@ -278,24 +279,29 @@
     const sendBtn = document.getElementById('sendBtn');
     
     let commentIdCounter = 0;
+    let currentPostId = localStorage.getItem('currentPostId') || 'post-1';
     
-    // Kommentare beim Laden der Seite anzeigen
+    // Kommentare für aktuellen Post beim Laden anzeigen
     function loadComments() {
-      const saved = localStorage.getItem('comments');
-      if(saved) {
-        try {
-          const comments = JSON.parse(saved);
-          comments.forEach(comment => {
-            renderComment(comment, commentsContainer);
-          });
-          // ID-Counter aktualisieren
-          commentIdCounter = Math.max(...comments.map(c => getMaxId(c)), 0) + 1;
-        } catch(e) {
-          // Fallback für alte Kommentare ohne IDs
-          initializeDefaultComments();
+      const allCommentsRaw = localStorage.getItem('postComments');
+      if(!allCommentsRaw) {
+        initializeDefaultComments();
+        return;
+      }
+      
+      try {
+        const allComments = JSON.parse(allCommentsRaw);
+        const postComments = allComments[currentPostId] || [];
+        
+        postComments.forEach(comment => {
+          renderComment(comment, commentsContainer);
+        });
+        
+        // ID-Counter aktualisieren
+        if(postComments.length > 0) {
+          commentIdCounter = Math.max(...postComments.map(c => getMaxId(c)), 0) + 1;
         }
-      } else {
-        // Erste Default-Kommentare
+      } catch(e) {
         initializeDefaultComments();
       }
     }
@@ -312,15 +318,9 @@
     }
     
     function initializeDefaultComments() {
-      const defaultComments = [
-        { id: 0, author: 'User1', text: 'Krasses Gedicht, vor allem die Atmosphäre!', replies: [] },
-        { id: 1, author: 'User2', text: 'Mussten wir in der Schule auswendig lernen.', replies: [] }
-      ];
-      localStorage.setItem('comments', JSON.stringify(defaultComments));
-      defaultComments.forEach(comment => {
-        renderComment(comment, commentsContainer);
-      });
-      commentIdCounter = 2;
+      const defaultComments = {};
+      localStorage.setItem('postComments', JSON.stringify(defaultComments));
+      commentIdCounter = 0;
     }
     
     function renderComment(comment, container, isReply = false) {
@@ -382,18 +382,22 @@
         replies: []
       };
       
-      // Kommentare aus localStorage laden
-      let comments = [];
-      const savedComments = localStorage.getItem('comments');
+      // Kommentare für aktuellen Post aus localStorage laden
+      let allComments = {};
+      const savedComments = localStorage.getItem('postComments');
       if(savedComments) {
-        try { comments = JSON.parse(savedComments); } catch(e) { comments = []; }
+        try { allComments = JSON.parse(savedComments); } catch(e) { allComments = {}; }
+      }
+      
+      if(!allComments[currentPostId]) {
+        allComments[currentPostId] = [];
       }
       
       // Antwort zum richtigen Parent hinzufügen
-      addReplyToComment(comments, parentId, newReply);
+      addReplyToComment(allComments[currentPostId], parentId, newReply);
       
       // Speichern
-      localStorage.setItem('comments', JSON.stringify(comments));
+      localStorage.setItem('postComments', JSON.stringify(allComments));
       
       // UI aktualisieren
       const parentBox = document.querySelector(`[data-comment-id="${parentId}"]`);
@@ -477,14 +481,19 @@
       commentInput.value = '';
       nameInput.value = '';
       
-      // Kommentar dauerhaft speichern
-      let comments = [];
-      const savedComments = localStorage.getItem('comments');
+      // Kommentar für aktuellen Post speichern
+      let allComments = {};
+      const savedComments = localStorage.getItem('postComments');
       if(savedComments) {
-        try { comments = JSON.parse(savedComments); } catch(e) { comments = []; }
+        try { allComments = JSON.parse(savedComments); } catch(e) { allComments = {}; }
       }
-      comments.unshift(newComment);
-      localStorage.setItem('comments', JSON.stringify(comments));
+      
+      if(!allComments[currentPostId]) {
+        allComments[currentPostId] = [];
+      }
+      
+      allComments[currentPostId].unshift(newComment);
+      localStorage.setItem('postComments', JSON.stringify(allComments));
       
       // Benachrichtigung erstellen
       createNotification(name, text);
@@ -499,6 +508,14 @@
       if(saved === 'true') {
         const icon = document.querySelector('.notification-icon');
         if(icon) icon.src = 'punkt.png';
+      }
+      
+      // Zurück-Button geht IMMER zu forum.html
+      const backBtn = document.getElementById('backBtn');
+      if(backBtn) {
+        backBtn.addEventListener('click', () => {
+          window.location.href = 'forum.html';
+        });
       }
     });
   </script>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipps</title>
+  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inder', sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:transparent;
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;z-index:1;
+    }
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    .back-icon{
+      position:absolute;left:16px;
+      height:20px;width:auto;cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;font-size:22px;color:#4A7856;
+    }
+    .notification-icon{
+      position:absolute;right:20px;top:50%;
+      transform:translateY(-50%);
+      height:28px;width:auto;cursor:pointer;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .content{
+      flex:1;padding:16px;overflow-y:auto;
+    }
+    .post{
+      background:rgba(245, 240, 220, 0.75);
+      backdrop-filter: blur(5px);
+      padding:16px;
+      padding-bottom:50px;
+      border-radius:8px;
+      margin-bottom:16px;
+      position:relative;
+    }
+    .post-header{
+      display:flex;justify-content:space-between;
+      align-items:flex-start;margin-bottom:12px;
+    }
+    .post-author{
+      font-weight:bold;font-size:16px;color:#4A7856;
+    }
+    .post-time{
+      font-size:13px;color:#8B8B6B;
+    }
+    .post-content{
+      font-size:15px;color:#4A7856;
+      line-height:1.6;margin-bottom:8px;
+      white-space: pre-line;
+    }
+    .post-actions{
+      display:flex;gap:8px;align-items:center;
+      position:absolute;bottom:12px;right:12px;
+    }
+    .action-btn{
+      display:flex;align-items:center;gap:2px;
+      background:none;border:none;
+      color:#4A7856;cursor:pointer;
+      font-size:14px;padding:4px;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .action-btn:hover{
+      background:rgba(74, 120, 86, 0.1);
+      transform:scale(1.05);
+    }
+    .action-icon{height:20px;width:auto;}
+    .bookmark-icon{
+      position:absolute;top:16px;right:16px;
+      height:24px;width:auto;cursor:pointer;
+      transition:all 0.2s ease;
+    }
+    .bookmark-icon:hover{
+      transform:scale(1.1);
+    }
+    .votes{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+      min-width:20px;
+    }
+    .comment-count{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+    }
+    .plus{
+      display:flex;justify-content:center;
+      margin:8px 0 12px;
+    }
+    .plus-circle{
+      width:48px;height:48px;border-radius:50%;
+      background:#4A7856;color:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      font-size:28px;cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+      transition:all 0.2s ease;
+    }
+    .plus-circle:hover{
+      background:#5A8866;
+      transform:scale(1.05);
+    }
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;padding:8px;
+      border-radius:8px;transition:all 0.2s ease;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{height:36px;width:auto;}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
+      <div class="top-title">Tipps</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="content">
+      <div class="post" data-votes="56" data-post-id="tipps-1">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">WeiseWorte</div>
+            <div class="post-time">vor 45min</div>
+          </div>
+        </div>
+        <div class="post-content">Das Sprichwort - Friedrich von Logau
+
+Ein gutes Sprichwort ist wie ein Edelstein,
+Man faßt's in kurze Worte ein,
+Doch gibt's zu denken für die Zeit,
+Bis an die Ewigkeit.
+
+Drum merke dir: Was kurz und gut,
+Bleibt länger als der Winde Wut,
+Und was mit wenig Worten spricht,
+Vergisst das Herz so leichtlich nicht.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">2</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">56</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="73" data-post-id="tipps-2">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">Lebenskünstler</div>
+            <div class="post-time">vor 2h</div>
+          </div>
+        </div>
+        <div class="post-content">Wie man's macht - Wilhelm Busch
+
+Willst du froh und glücklich leben,
+Lass kein Ärgernis dich heben,
+Lass die andern reden, rasen,
+Lauf geschwind in Wald und Rasen,
+Such die stillen Plätzchen auf,
+Da gibt's Ruh im Lebenslauf.
+
+Und vergiss die Zeit zu leben,
+Freude soll's im Alltag geben!</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">1</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">73</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="64" data-post-id="tipps-3">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">Ratgeber_Pro</div>
+            <div class="post-time">vor 5h</div>
+          </div>
+        </div>
+        <div class="post-content">Lebensweisheit - Johann Wolfgang von Goethe
+
+Vom Rechten, das uns leuchten soll,
+Ist selten jemand recht erfüllt;
+Darum ist auch das Leben voll
+Von manchem wunderlichen Bild.
+
+Doch wer sich selbst erkennen kann,
+Der ist auf rechtem Weg und Bahn,
+Und findet, was er suchen soll:
+Das Leben, reich und wundervoll.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">2</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">64</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus">
+      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'tipps');
+      sessionStorage.setItem('forumReferrer', 'tipps.html');
+    });
+    
+    // Keine Fake-Kommentare mehr - nur echte, selbst gepostete Kommentare
+    
+    const container = document.querySelector('.content');
+    
+    // Neue Posts laden (nur für diese Seite)
+    const newPostsRaw = sessionStorage.getItem('newPosts');
+    if(newPostsRaw) {
+      try {
+        const newPosts = JSON.parse(newPostsRaw);
+        newPosts.forEach((p, index) => {
+          if(p.sourcePage === 'tipps') {
+            const postId = 'new-tipps-' + index;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.dataset.postId = postId;
+            newPost.dataset.votes = '0';
+            newPost.innerHTML = `
+              <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+              <div class="post-header">
+                <span class="post-author">${p.name || 'Anonym'}</span>
+              </div>
+              <div class="post-time">vor 1min</div>
+              <div class="post-title">${p.title || 'Neuer Post'}</div>
+              <div class="post-content">${p.text}</div>
+              <div class="post-actions">
+                <button class="action-btn comment-btn">
+                  <img src="gkomm.png" alt="Kommentare" class="action-icon">
+                  <span class="comment-count">0</span>
+                </button>
+                <button class="action-btn upvote-btn">
+                  <img src="gup.png" alt="Upvote" class="action-icon">
+                  <span class="votes">0</span>
+                </button>
+              </div>
+            `;
+            container.insertBefore(newPost, container.firstChild);
+          }
+        });
+      } catch(e) {}
+    }
+    
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const post = this.closest('.post');
+        const postId = post.dataset.postId;
+        if(postId) {
+          localStorage.setItem('currentPostId', postId);
+          // Speichere aktuelle Seite als Referrer für korrekte Zurück-Navigation
+          sessionStorage.setItem('forumReferrer', 'tipps.html');
+          // Lösche fromNotification-Flag, da wir direkt vom Forum kommen
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = 'forum_kommentare.html';
+        }
+      });
+    });
+    
+    const posts = Array.from(container.querySelectorAll('.post'));
+    posts.forEach(post => {
+      if(!post.dataset.votes) {
+        post.dataset.votes = post.querySelector('.votes') ? post.querySelector('.votes').textContent : '0';
+      }
+      
+      const btn = post.querySelector('.upvote-btn');
+      const votesSpan = post.querySelector('.votes');
+      if(btn && votesSpan) {
+        btn.addEventListener('click', () => {
+          let votes = parseInt(post.dataset.votes || '0', 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          
+          const sorted = posts.slice().sort(
+            (a,b) => parseInt(b.dataset.votes||'0',10) - parseInt(a.dataset.votes||'0',10)
+          );
+          sorted.forEach(p => container.appendChild(p));
+        });
+      }
+    });
+
+    function savePostData(author, text) {
+      let saved = [];
+      const raw = sessionStorage.getItem('savedPosts');
+      if(raw) { try { saved = JSON.parse(raw); } catch(e) { saved = []; } }
+      saved.push({title: 'Tipps Post', author, text});
+      sessionStorage.setItem('savedPosts', JSON.stringify(saved));
+    }
+    
+    container.querySelectorAll('.post').forEach(post => {
+      const saveBtn = post.querySelector('.bookmark-icon');
+      if(saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          const author = post.querySelector('.post-author').textContent;
+          const text = post.querySelector('.post-content').textContent;
+          savePostData(author, text);
+          alert('Post gespeichert!');
+        });
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png';
+      }
+      
+      updateCommentCounts();
+    });
+    
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem('postComments');
+      if(!postCommentsRaw) return;
+      
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        document.querySelectorAll('.post').forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector('.comment-count');
+            if(countSpan) {
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies);
+        }
+      });
+      return total;
+    }
+
+    /* ========== FAKE KOMMENTARE FÜR TIPPS ========== */
+    function initializeTippsComments() {
+      const initialized = localStorage.getItem('tippsCommentsInit');
+      if(initialized === 'true') return;
+
+      const existingComments = localStorage.getItem('postComments');
+      const postComments = existingComments ? JSON.parse(existingComments) : {};
+
+      // Fake Kommentare für "Die Stadt" (tipps-1) - 2 Kommentare
+      postComments['tipps-1'] = [
+        {
+          id: 'tipps-1-1',
+          name: 'StadtMensch',
+          text: 'Heym fängt die urbane Atmosphäre perfekt ein! Großartig für Stadtlyrik.',
+          timestamp: 'vor 2h',
+          replies: []
+        },
+        {
+          id: 'tipps-1-2',
+          name: 'ExpressionismusFan',
+          text: 'Einer der besten expressionistischen Texte! Danke für den Tipp 📚',
+          timestamp: 'vor 45min',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "An den Mond" (tipps-2) - 1 Kommentar
+      postComments['tipps-2'] = [
+        {
+          id: 'tipps-2-1',
+          name: 'GoetheVerehrer',
+          text: 'Goethe schreibt über Einsamkeit wie kein Zweiter. Wunderschön! 🌙',
+          timestamp: 'vor 4h',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Weltende" (tipps-3) - 2 Kommentare
+      postComments['tipps-3'] = [
+        {
+          id: 'tipps-3-1',
+          name: 'VanHoddisFan',
+          text: 'Dieses Gedicht ist der Hammer! Apokalypse in 8 Zeilen 💥',
+          timestamp: 'vor 3h',
+          replies: []
+        },
+        {
+          id: 'tipps-3-2',
+          name: 'LitWissenschaft',
+          text: 'Meilenstein des Expressionismus! Jeder sollte das kennen.',
+          timestamp: 'vor 2h',
+          replies: []
+        }
+      ];
+
+      localStorage.setItem('postComments', JSON.stringify(postComments));
+      localStorage.setItem('tippsCommentsInit', 'true');
+      updateCommentCounts();
+    }
+
+    initializeTippsComments();
+    
+    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
+    updateCommentCounts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lästerecke</title>
+  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inder', sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:transparent;
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;z-index:1;
+    }
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    .back-icon{
+      position:absolute;left:16px;
+      height:20px;width:auto;cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;font-size:22px;color:#4A7856;
+    }
+    .notification-icon{
+      position:absolute;right:20px;top:50%;
+      transform:translateY(-50%);
+      height:28px;width:auto;cursor:pointer;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .content{
+      flex:1;padding:16px;overflow-y:auto;
+    }
+    .post{
+      background:rgba(245, 240, 220, 0.75);
+      backdrop-filter: blur(5px);
+      padding:16px;
+      padding-bottom:50px;
+      border-radius:8px;
+      margin-bottom:16px;
+      position:relative;
+    }
+    .post-header{
+      display:flex;justify-content:space-between;
+      align-items:flex-start;margin-bottom:12px;
+    }
+    .post-author{
+      font-weight:bold;font-size:16px;color:#4A7856;
+    }
+    .post-time{
+      font-size:13px;color:#8B8B6B;
+    }
+    .post-content{
+      font-size:15px;color:#4A7856;
+      line-height:1.6;margin-bottom:8px;
+      white-space: pre-line;
+    }
+    .post-actions{
+      display:flex;gap:8px;align-items:center;
+      position:absolute;bottom:12px;right:12px;
+    }
+    .action-btn{
+      display:flex;align-items:center;gap:2px;
+      background:none;border:none;
+      color:#4A7856;cursor:pointer;
+      font-size:14px;padding:4px;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .action-btn:hover{
+      background:rgba(74, 120, 86, 0.1);
+      transform:scale(1.05);
+    }
+    .action-icon{height:20px;width:auto;}
+    .bookmark-icon{
+      position:absolute;top:16px;right:16px;
+      height:24px;width:auto;cursor:pointer;
+      transition:all 0.2s ease;
+    }
+    .bookmark-icon:hover{
+      transform:scale(1.1);
+    }
+    .votes{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+      min-width:20px;
+    }
+    .comment-count{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+    }
+    .plus{
+      display:flex;justify-content:center;
+      margin:8px 0 12px;
+    }
+    .plus-circle{
+      width:48px;height:48px;border-radius:50%;
+      background:#4A7856;color:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      font-size:28px;cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+      transition:all 0.2s ease;
+    }
+    .plus-circle:hover{
+      background:#5A8866;
+      transform:scale(1.05);
+    }
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;padding:8px;
+      border-radius:8px;transition:all 0.2s ease;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{height:36px;width:auto;}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
+      <div class="top-title">Lästerecke</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="content">
+      <div class="post" data-votes="69" data-post-id="laester-1">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">Anonymous_420</div>
+            <div class="post-time">vor 30min</div>
+          </div>
+        </div>
+        <div class="post-content">Dunkel war's, der Mond schien helle
+
+Dunkel war's, der Mond schien helle,
+Schnee lag auf der grünen Flur,
+als ein Wagen blitzeschnelle
+langsam um die Ecke fuhr.
+
+Drinnen saßen stehend Leute,
+schweigend ins Gespräch vertieft,
+als ein totgeschoss'ner Hase
+auf der Sandbank Schlittschuh lief.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">2</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">69</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="88" data-post-id="laester-2">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">TrollMaster</div>
+            <div class="post-time">vor 2h</div>
+          </div>
+        </div>
+        <div class="post-content">Der Lattenzaun - Christian Morgenstern
+
+Es war einmal ein Lattenzaun,
+mit Zwischenraum, hindurchzuschaun.
+
+Ein Architekt, der dieses sah,
+stand eines Abends plötzlich da –
+
+und nahm den Zwischenraum heraus
+und baute draus ein großes Haus.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">1</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">88</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="55" data-post-id="laester-3">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">MemeLord2026</div>
+            <div class="post-time">vor 4h</div>
+          </div>
+        </div>
+        <div class="post-content">Das ästhetische Wiesel - Christian Morgenstern
+
+Ein Wiesel
+saß auf einem Kiesel
+inmitten Bachgeriesel.
+
+Wisst ihr
+weshalb?
+
+Das Mondkalb
+verriet es mir
+im Stillen:
+
+Das raffinierte Tier
+tat's um des Reimes willen.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">2</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">55</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus">
+      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'laesterecke');
+      sessionStorage.setItem('forumReferrer', 'laesterecke.html');
+    });
+    
+    // Keine Fake-Kommentare mehr - nur echte, selbst gepostete Kommentare
+    
+    const container = document.querySelector('.content');
+    
+    // Neue Posts laden (nur für diese Seite)
+    const newPostsRaw = sessionStorage.getItem('newPosts');
+    if(newPostsRaw) {
+      try {
+        const newPosts = JSON.parse(newPostsRaw);
+        newPosts.forEach((p, index) => {
+          if(p.sourcePage === 'laesterecke') {
+            const postId = 'new-laester-' + index;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.dataset.postId = postId;
+            newPost.dataset.votes = '0';
+            newPost.innerHTML = `
+              <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+              <div class="post-header">
+                <span class="post-author">${p.name || 'Anonym'}</span>
+              </div>
+              <div class="post-time">vor 1min</div>
+              <div class="post-title">${p.title || 'Neuer Post'}</div>
+              <div class="post-content">${p.text}</div>
+              <div class="post-actions">
+                <button class="action-btn comment-btn">
+                  <img src="gkomm.png" alt="Kommentare" class="action-icon">
+                  <span class="comment-count">0</span>
+                </button>
+                <button class="action-btn upvote-btn">
+                  <img src="gup.png" alt="Upvote" class="action-icon">
+                  <span class="votes">0</span>
+                </button>
+              </div>
+            `;
+            container.insertBefore(newPost, container.firstChild);
+          }
+        });
+      } catch(e) {}
+    }
+    
+    // Kommentar-Buttons
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const post = this.closest('.post');
+        const postId = post.dataset.postId;
+        if(postId) {
+          localStorage.setItem('currentPostId', postId);
+          // Speichere aktuelle Seite als Referrer für korrekte Zurück-Navigation
+          sessionStorage.setItem('forumReferrer', 'laesterecke.html');
+          // Lösche fromNotification-Flag, da wir direkt vom Forum kommen
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = 'forum_kommentare.html';
+        }
+      });
+    });
+    
+    // Upvotes
+    const posts = Array.from(container.querySelectorAll('.post'));
+    posts.forEach(post => {
+      if(!post.dataset.votes) {
+        post.dataset.votes = post.querySelector('.votes') ? post.querySelector('.votes').textContent : '0';
+      }
+      
+      const btn = post.querySelector('.upvote-btn');
+      const votesSpan = post.querySelector('.votes');
+      if(btn && votesSpan) {
+        btn.addEventListener('click', () => {
+          let votes = parseInt(post.dataset.votes || '0', 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          
+          const sorted = posts.slice().sort(
+            (a,b) => parseInt(b.dataset.votes||'0',10) - parseInt(a.dataset.votes||'0',10)
+          );
+          sorted.forEach(p => container.appendChild(p));
+        });
+      }
+    });
+
+    // Merken
+    function savePostData(author, text) {
+      let saved = [];
+      const raw = sessionStorage.getItem('savedPosts');
+      if(raw) { try { saved = JSON.parse(raw); } catch(e) { saved = []; } }
+      saved.push({title: 'Lästerecke Post', author, text});
+      sessionStorage.setItem('savedPosts', JSON.stringify(saved));
+    }
+    
+    container.querySelectorAll('.post').forEach(post => {
+      const saveBtn = post.querySelector('.bookmark-icon');
+      if(saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          const author = post.querySelector('.post-author').textContent;
+          const text = post.querySelector('.post-content').textContent;
+          savePostData(author, text);
+          alert('Post gespeichert!');
+        });
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png';
+      }
+      
+      updateCommentCounts();
+    });
+    
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem('postComments');
+      if(!postCommentsRaw) return;
+      
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        document.querySelectorAll('.post').forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector('.comment-count');
+            if(countSpan) {
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies);
+        }
+      });
+      return total;
+    }
+
+    /* ========== FAKE KOMMENTARE FÜR LÄSTERECKE ========== */
+    function initializeLaestereckeComments() {
+      const initialized = localStorage.getItem('laestereckeCommentsInit');
+      if(initialized === 'true') return;
+
+      const existingComments = localStorage.getItem('postComments');
+      const postComments = existingComments ? JSON.parse(existingComments) : {};
+
+      // Fake Kommentare für "Dunkel war's" (laester-1) - 2 Kommentare
+      postComments['laester-1'] = [
+        {
+          id: 'laester-1-1',
+          name: 'AbsurdFan',
+          text: 'Hahahaha! Jeder Vers ist ein Widerspruch. Genial! 😂',
+          timestamp: 'vor 25min',
+          replies: []
+        },
+        {
+          id: 'laester-1-2',
+          name: 'WitzBold',
+          text: 'Mein Deutschlehrer hasst dieses Gedicht 🤣',
+          timestamp: 'vor 15min',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Der Lattenzaun" (laester-2) - 1 Kommentar
+      postComments['laester-2'] = [
+        {
+          id: 'laester-2-1',
+          name: 'MorgensternFan',
+          text: 'Morgenstern war seiner Zeit voraus! Absurder Humor vom Feinsten.',
+          timestamp: 'vor 1h',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Dunkel war's II" (laester-3) - 2 Kommentare
+      postComments['laester-3'] = [
+        {
+          id: 'laester-3-1',
+          name: 'NonsenseLover',
+          text: 'Ich kann nicht mehr 🤣 Das ist zu gut!',
+          timestamp: 'vor 3h',
+          replies: []
+        },
+        {
+          id: 'laester-3-2',
+          name: 'Comedy_Gold',
+          text: 'Brauche mehr davon! Hat jemand mehr absurde Gedichte?',
+          timestamp: 'vor 2h',
+          replies: []
+        }
+      ];
+
+      localStorage.setItem('postComments', JSON.stringify(postComments));
+      localStorage.setItem('laestereckeCommentsInit', 'true');
+      updateCommentCounts();
+    }
+
+    initializeLaestereckeComments();
+    
+    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
+    updateCommentCounts();
+  </script>
+</body>
+</html>

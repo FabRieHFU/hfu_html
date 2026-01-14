@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kommentare</title>
-  <link rel="icon" type="image/x-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -273,61 +273,82 @@
   </div>
 
   <script>
-    const commentsContainer = document.getElementById('comments');
-    const nameInput = document.getElementById('nameInput');
-    const commentInput = document.getElementById('commentInput');
-    const sendBtn = document.getElementById('sendBtn');
+    /* ========== DOM ELEMENTE REFERENZIEREN ========== */
+    const commentsContainer = document.getElementById('comments'); // Container für alle Kommentare
+    const nameInput = document.getElementById('nameInput'); // Eingabefeld für Namen
+    const commentInput = document.getElementById('commentInput'); // Textarea für Kommentar-Text
+    const sendBtn = document.getElementById('sendBtn'); // Senden-Button
     
-    let commentIdCounter = 0;
-    let currentPostId = localStorage.getItem('currentPostId') || 'post-1';
+    /* ========== GLOBALE VARIABLEN ========== */
+    let commentIdCounter = 0; // Zähler für eindeutige Kommentar-IDs
+    let currentPostId = localStorage.getItem('currentPostId') || 'post-1'; // ID des aktuellen Posts
     
-    // Kommentare für aktuellen Post beim Laden anzeigen
+    /* ========== KOMMENTARE LADEN ========== */
+    // Lädt alle Kommentare für den aktuellen Post aus localStorage und zeigt sie an
+    /* ========== KOMMENTARE LADEN ========== */
+    // Lädt alle Kommentare für den aktuellen Post aus localStorage und zeigt sie an
     function loadComments() {
+      // localStorage auslesen - enthält alle Kommentare für alle Posts
       const allCommentsRaw = localStorage.getItem('postComments');
       if(!allCommentsRaw) {
-        initializeDefaultComments();
+        initializeDefaultComments(); // Falls keine Kommentare vorhanden, initialisiere leeres Objekt
         return;
       }
       
       try {
-        const allComments = JSON.parse(allCommentsRaw);
-        const postComments = allComments[currentPostId] || [];
+        const allComments = JSON.parse(allCommentsRaw); // JSON String in Objekt umwandeln
+        const postComments = allComments[currentPostId] || []; // Nur Kommentare für aktuellen Post holen
         
+        // Jeden Kommentar rendern (anzeigen)
         postComments.forEach(comment => {
           renderComment(comment, commentsContainer);
         });
         
-        // ID-Counter aktualisieren
+        // ID-Counter aktualisieren: Höchste ID finden + 1
         if(postComments.length > 0) {
           commentIdCounter = Math.max(...postComments.map(c => getMaxId(c)), 0) + 1;
         }
       } catch(e) {
-        initializeDefaultComments();
+        initializeDefaultComments(); // Bei Fehler (z.B. korrupte Daten) neu initialisieren
       }
     }
     
+    /* ========== HÖCHSTE ID REKURSIV FINDEN ========== */
+    // Findet die höchste ID in einem Kommentar und allen seinen Antworten (rekursiv)
+    /* ========== HÖCHSTE ID REKURSIV FINDEN ========== */
+    // Findet die höchste ID in einem Kommentar und allen seinen Antworten (rekursiv)
     function getMaxId(comment) {
-      let maxId = comment.id || 0;
+      let maxId = comment.id || 0; // Starte mit der ID des Kommentars
+      // Durchsuche alle Antworten rekursiv
       if(comment.replies && comment.replies.length > 0) {
         comment.replies.forEach(reply => {
-          const replyMaxId = getMaxId(reply);
+          const replyMaxId = getMaxId(reply); // Rekursiver Aufruf für Antworten
           if(replyMaxId > maxId) maxId = replyMaxId;
         });
       }
       return maxId;
     }
     
+    /* ========== LEERES KOMMENTAR-OBJEKT INITIALISIEREN ========== */
+    // Erstellt ein leeres Kommentar-Objekt in localStorage
+    /* ========== LEERES KOMMENTAR-OBJEKT INITIALISIEREN ========== */
+    // Erstellt ein leeres Kommentar-Objekt in localStorage
     function initializeDefaultComments() {
-      const defaultComments = {};
+      const defaultComments = {}; // Leeres Objekt: wird später Posts als Keys bekommen
       localStorage.setItem('postComments', JSON.stringify(defaultComments));
-      commentIdCounter = 0;
+      commentIdCounter = 0; // Counter auf 0 setzen
     }
     
+    /* ========== KOMMENTAR ANZEIGEN ========== */
+    // Erstellt HTML-Element für einen Kommentar und fügt es dem Container hinzu
+    /* ========== KOMMENTAR ANZEIGEN ========== */
+    // Erstellt HTML-Element für einen Kommentar und fügt es dem Container hinzu
     function renderComment(comment, container, isReply = false) {
       const box = document.createElement('div');
-      box.className = isReply ? 'reply-box' : 'comment-box';
-      box.dataset.commentId = comment.id;
+      box.className = isReply ? 'reply-box' : 'comment-box'; // Verschiedene CSS-Klassen für Kommentar vs. Antwort
+      box.dataset.commentId = comment.id; // ID als data-Attribut speichern für spätere Suche
       
+      // HTML-Inhalt des Kommentars erstellen
       box.innerHTML = `
         <div class="author">${comment.author}</div>
         <div>${comment.text}</div>
@@ -344,65 +365,81 @@
         </div>
       `;
       
-      container.appendChild(box);
+      container.appendChild(box); // Kommentar zum Container hinzufügen
       
-      // Antworten rendern
+      // Rekursiv alle Antworten rendern
+      // Rekursiv alle Antworten rendern
       if(comment.replies && comment.replies.length > 0) {
         const repliesContainer = document.createElement('div');
-        repliesContainer.className = 'replies';
-        repliesContainer.dataset.parentId = comment.id;
+        repliesContainer.className = 'replies'; // Extra Container für Antworten (für Einrückung)
+        repliesContainer.dataset.parentId = comment.id; // Parent-ID speichern
+        // Für jede Antwort: renderComment rekursiv aufrufen
         comment.replies.forEach(reply => {
-          renderComment(reply, repliesContainer, true);
+          renderComment(reply, repliesContainer, true); // isReply = true
         });
-        box.appendChild(repliesContainer);
+        box.appendChild(repliesContainer); // Antwort-Container zum Kommentar hinzufügen
       }
     }
     
+    /* ========== ANTWORT-EINGABEFELD EIN-/AUSBLENDEN ========== */
+    // Zeigt oder versteckt das Eingabefeld für Antworten
+    /* ========== ANTWORT-EINGABEFELD EIN-/AUSBLENDEN ========== */
+    // Zeigt oder versteckt das Eingabefeld für Antworten
     function toggleReplyInput(commentId) {
       const replyArea = document.getElementById(`reply-input-${commentId}`);
       if(replyArea) {
-        replyArea.classList.toggle('active');
+        replyArea.classList.toggle('active'); // Toggle CSS-Klasse 'active' (macht Eingabefeld sichtbar)
       }
     }
     
+    /* ========== ANTWORT SENDEN ========== */
+    // Erstellt eine neue Antwort und fügt sie dem Parent-Kommentar hinzu
+    /* ========== ANTWORT SENDEN ========== */
+    // Erstellt eine neue Antwort und fügt sie dem Parent-Kommentar hinzu
     function sendReply(parentId) {
+      // Eingabefeld-Elemente finden
       const replyArea = document.getElementById(`reply-input-${parentId}`);
       const nameInput = replyArea.querySelector('.reply-name-input');
       const textInput = replyArea.querySelector('.reply-text-input');
       
-      const name = nameInput.value.trim() || 'Anon';
+      // Werte auslesen und trimmen (Leerzeichen entfernen)
+      const name = nameInput.value.trim() || 'Anon'; // Falls leer, 'Anon' verwenden
       const text = textInput.value.trim();
       
-      if (!text) return;
+      if (!text) return; // Abbrechen wenn kein Text eingegeben wurde
       
+      // Neue Antwort als Objekt erstellen
       const newReply = {
-        id: commentIdCounter++,
+        id: commentIdCounter++, // ID vergeben und Counter erhöhen
         author: name,
         text: text,
-        replies: []
+        replies: [] // Neue Antwort hat noch keine eigenen Antworten
       };
       
-      // Kommentare für aktuellen Post aus localStorage laden
+      // Alle Kommentare aus localStorage laden
       let allComments = {};
       const savedComments = localStorage.getItem('postComments');
       if(savedComments) {
         try { allComments = JSON.parse(savedComments); } catch(e) { allComments = {}; }
       }
       
+      // Sicherstellen, dass Array für aktuellen Post existiert
       if(!allComments[currentPostId]) {
         allComments[currentPostId] = [];
       }
       
-      // Antwort zum richtigen Parent hinzufügen
+      // Antwort zum richtigen Parent-Kommentar hinzufügen (rekursiv)
       addReplyToComment(allComments[currentPostId], parentId, newReply);
       
-      // Speichern
+      // Aktualisierte Kommentare in localStorage speichern
       localStorage.setItem('postComments', JSON.stringify(allComments));
       
-      // UI aktualisieren
+      // UI aktualisieren: Antwort sofort anzeigen
       const parentBox = document.querySelector(`[data-comment-id="${parentId}"]`);
       let repliesContainer = parentBox.querySelector(`.replies[data-parent-id="${parentId}"]`);
       
+      // Falls noch kein Antwort-Container existiert, erstelle einen
+      // Falls noch kein Antwort-Container existiert, erstelle einen
       if(!repliesContainer) {
         repliesContainer = document.createElement('div');
         repliesContainer.className = 'replies';
@@ -410,9 +447,10 @@
         parentBox.appendChild(repliesContainer);
       }
       
+      // Neue Antwort rendern und anzeigen
       renderComment(newReply, repliesContainer, true);
       
-      // Input-Bereich schließen und leeren
+      // Eingabefelder leeren und Eingabebereich schließen
       nameInput.value = '';
       textInput.value = '';
       toggleReplyInput(parentId);
@@ -421,55 +459,73 @@
       createNotification(name, text, 'Antwort');
     }
     
+    /* ========== ANTWORT ZUM PARENT HINZUFÜGEN (REKURSIV) ========== */
+    // Durchsucht die Kommentar-Struktur rekursiv und fügt Antwort zum richtigen Parent hinzu
+    /* ========== ANTWORT ZUM PARENT HINZUFÜGEN (REKURSIV) ========== */
+    // Durchsucht die Kommentar-Struktur rekursiv und fügt Antwort zum richtigen Parent hinzu
     function addReplyToComment(comments, parentId, reply) {
       for(let comment of comments) {
+        // Wenn dies der gesuchte Parent ist, Antwort hinzufügen
         if(comment.id === parentId) {
-          if(!comment.replies) comment.replies = [];
-          comment.replies.push(reply);
-          return true;
+          if(!comment.replies) comment.replies = []; // Falls noch kein replies-Array existiert
+          comment.replies.push(reply); // Antwort hinzufügen
+          return true; // Erfolgreich gefunden und hinzugefügt
         }
+        // Rekursiv in den Antworten des aktuellen Kommentars suchen
         if(comment.replies && comment.replies.length > 0) {
           if(addReplyToComment(comment.replies, parentId, reply)) {
-            return true;
+            return true; // In tieferen Ebenen gefunden
           }
         }
       }
-      return false;
+      return false; // Parent nicht gefunden
     }
     
+    /* ========== BENACHRICHTIGUNG ERSTELLEN ========== */
+    // Erstellt eine neue Benachrichtigung und speichert sie in localStorage
+    /* ========== BENACHRICHTIGUNG ERSTELLEN ========== */
+    // Erstellt eine neue Benachrichtigung und speichert sie in localStorage
     function createNotification(author, text, type = 'Kommentar') {
+      // Bestehende Benachrichtigungen laden
       let notifications = [];
       const saved = localStorage.getItem('notifications');
       if(saved) {
         try { notifications = JSON.parse(saved); } catch(e) { notifications = []; }
       }
       
+      // Neue Benachrichtigung erstellen
       const notification = {
         type: 'comment',
         message: `Neuer ${type} zum Post`,
         author: author,
         text: text,
-        timestamp: new Date().toLocaleString('de-DE'),
+        timestamp: new Date().toLocaleString('de-DE'), // Deutsches Datumsformat
         link: 'forum_kommentare.html'
       };
       
-      notifications.push(notification);
-      localStorage.setItem('notifications', JSON.stringify(notifications));
+      notifications.push(notification); // Zur Liste hinzufügen
+      localStorage.setItem('notifications', JSON.stringify(notifications)); // Speichern
       
-      // Header-Icon sofort auf aktiv setzen
+      // Benachrichtigungs-Icon auf allen Seiten aktivieren
       localStorage.setItem('hasNotifications', 'true');
       const icon = document.querySelector('.notification-icon');
-      if(icon) icon.src = 'punkt.png';
+      if(icon) icon.src = 'punkt.png'; // Icon sofort auf dieser Seite ändern
     }
     
-    // Kommentare beim Start laden
-    loadComments();
+    /* ========== KOMMENTARE BEIM START LADEN ========== */
+    loadComments(); // Funktion ausführen sobald Script geladen wird
 
+    /* ========== HAUPT-KOMMENTAR SENDEN ========== */
+    // Event Listener für den Senden-Button (für Haupt-Kommentare, nicht Antworten)
+    /* ========== HAUPT-KOMMENTAR SENDEN ========== */
+    // Event Listener für den Senden-Button (für Haupt-Kommentare, nicht Antworten)
     sendBtn.addEventListener('click', () => {
+      // Eingabewerte auslesen
       const name = nameInput.value.trim() || 'Anon';
       const text = commentInput.value.trim();
-      if (!text) return;
+      if (!text) return; // Abbrechen wenn kein Text
 
+      // Neuen Kommentar erstellen
       const newComment = {
         id: commentIdCounter++,
         author: name,
@@ -477,44 +533,51 @@
         replies: []
       };
       
+      // Sofort in UI anzeigen
       renderComment(newComment, commentsContainer);
+      
+      // Eingabefelder leeren
       commentInput.value = '';
       nameInput.value = '';
       
-      // Kommentar für aktuellen Post speichern
+      // Kommentar für aktuellen Post in localStorage speichern
       let allComments = {};
       const savedComments = localStorage.getItem('postComments');
       if(savedComments) {
         try { allComments = JSON.parse(savedComments); } catch(e) { allComments = {}; }
       }
       
+      // Sicherstellen dass Array für Post existiert
       if(!allComments[currentPostId]) {
         allComments[currentPostId] = [];
       }
       
+      // Neuen Kommentar am Anfang einfügen (neueste zuerst)
       allComments[currentPostId].unshift(newComment);
       localStorage.setItem('postComments', JSON.stringify(allComments));
       
       // Benachrichtigung erstellen
       createNotification(name, text);
       
-      // Seite neu laden um Reihenfolge zu korrigieren
+      // Seite neu laden um korrekte Reihenfolge zu gewährleisten
       location.reload();
     });
     
-    // Icon beim Laden aktualisieren
+    /* ========== SEITE GELADEN - INITIALISIERUNG ========== */
+    /* ========== SEITE GELADEN - INITIALISIERUNG ========== */
     window.addEventListener('DOMContentLoaded', () => {
+      // Benachrichtigungs-Icon Status prüfen und ggf. aktualisieren
       const saved = localStorage.getItem('hasNotifications');
       if(saved === 'true') {
         const icon = document.querySelector('.notification-icon');
-        if(icon) icon.src = 'punkt.png';
+        if(icon) icon.src = 'punkt.png'; // Rotes Icon mit Punkt anzeigen
       }
       
-      // Zurück-Button geht IMMER zu forum.html
+      // Zurück-Button: Geht IMMER zu forum.html (hart-codiert)
       const backBtn = document.getElementById('backBtn');
       if(backBtn) {
         backBtn.addEventListener('click', () => {
-          window.location.href = 'forum.html';
+          window.location.href = 'forum.html'; // Feste Navigation, unabhängig von forumReferrer
         });
       }
     });

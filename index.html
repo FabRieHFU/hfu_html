@@ -4,17 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HFU Buddy</title>
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <!-- Google Fonts - Inder Schriftart laden -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
+    /* ========== GLOBALE STYLES ========== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    /* Body: Zentriert den "Phone" Container und setzt Hintergrundfarbe */
     body {
       font-family: 'Inder', sans-serif;
       background-color: #E7DBB5;
@@ -25,6 +28,7 @@
       position: relative;
     }
     
+    /* Hintergrundbild mit reduzierter Opazität (30%) */
     body::before{
       content:"";
       position:fixed;
@@ -40,6 +44,8 @@
       z-index:0;
     }
 
+    /* ========== PHONE CONTAINER ========== */
+    /* Simuliert ein Handy-Display (375x667px = iPhone SE Größe) */
     .phone {
       width: 100%;
       max-width: 375px;
@@ -53,19 +59,21 @@
       z-index: 1;
     }
 
-    /* Splash */
+    /* ========== SPLASH SCREEN ========== */
+    /* Lade-Bildschirm beim Start der App */
     .center {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100%;
       color: #4A7856;
-      font-size: clamp(22px, 5vw, 26px);
+      font-size: clamp(22px, 5vw, 26px); /* Responsive Schriftgröße */
       font-weight: bold;
       background: rgba(231, 219, 181, 0.85);
     }
 
-    /* Home */
+    /* ========== HOME SCREEN ========== */
+    /* Header-Leiste oben mit Titel und Benachrichtigungs-Icon */
     .header-bar{
       position:relative;
       display:flex;
@@ -78,12 +86,14 @@
       backdrop-filter: blur(10px);
     }
     
+    /* "HFU Buddy" Titel in der Header-Leiste */
     .header-title{
       font-weight:bold;
       font-size:24px;
       color:#4A7856;
     }
     
+    /* Benachrichtigungs-Icon (Glocke) oben rechts */
     .notification-icon{
       position:absolute;
       right:20px;
@@ -96,20 +106,24 @@
       transition:all 0.2s ease;
     }
     
+    /* Hover-Effekt für Benachrichtigungs-Icon */
     .notification-icon:hover{
       transform:translateY(-50%) scale(1.1);
       background:rgba(47, 127, 81, 0.1);
     }
     
+    /* ========== MENU LIST ========== */
+    /* Container für alle Menu-Items (Forum, Fächer, Tipps, etc.) */
     .menu-list {
       flex: 1;
       display: flex;
       flex-direction: column;
       padding: 16px;
       gap: 12px;
-      overflow-y: auto;
+      overflow-y: auto; /* Scrollbar wenn Inhalt zu lang */
     }
     
+    /* Einzelne Menu-Kacheln (Forum, Fächer, Tipps, Seelsorge, Lästerecke, Raumplaner) */
     .menu-item {
       min-height: 70px;
       display: flex;
@@ -119,7 +133,7 @@
       border-radius: 12px;
       color: #4A7856;
       font-weight: bold;
-      font-size: clamp(18px, 4.5vw, 22px);
+      font-size: clamp(18px, 4.5vw, 22px); /* Responsive Schrift */
       cursor: default;
       text-decoration: none;
       background: rgba(245, 240, 220, 0.75);
@@ -129,10 +143,12 @@
       backdrop-filter: blur(5px);
     }
     
+    /* Klickbare Menu-Items (können angeklickt werden) */
     .menu-item.clickable {
       cursor: pointer;
     }
     
+    /* Hover-Effekt für klickbare Items */
     .menu-item.clickable:hover {
       background: rgba(237, 229, 202, 0.8);
       transform: translateY(-2px);
@@ -261,36 +277,41 @@
   </div>
 
   <script>
+  /* ========== SPLASH SCREEN LOGIC ========== */
+  /* Zeigt den Lade-Screen nur beim ersten Besuch für 5 Sekunden */
   const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
 
   if (!hasSeenSplash) {
-    // erstes Mal: Splash zeigen
+    // Erster Besuch: Splash-Screen für 5 Sekunden anzeigen
     setTimeout(function () {
       document.getElementById('splash').style.display = 'none';
       document.getElementById('home').style.display = 'flex';
-      sessionStorage.setItem('hasSeenSplash', 'true');
+      sessionStorage.setItem('hasSeenSplash', 'true'); // Merken, dass Splash gesehen wurde
     }, 5000);
   } else {
-    // später: direkt Home
+    // Spätere Besuche: Direkt Home-Screen anzeigen
     document.getElementById('splash').style.display = 'none';
     document.getElementById('home').style.display = 'flex';
   }
   
-  // Benachrichtigungs-Icon aktualisieren
+  /* ========== BENACHRICHTIGUNGS-ICON UPDATE ========== */
+  /* Ändert das Icon zu "punkt.png" wenn Benachrichtigungen vorhanden sind */
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('hasNotifications');
     if(saved === 'true') {
       const icon = document.querySelector('.notification-icon');
-      if(icon) icon.src = 'punkt.png';
+      if(icon) icon.src = 'punkt.png'; // Roter Punkt für neue Benachrichtigungen
     }
     
-    // Menü-Kacheln laden
+    // Menü-Kacheln aus localStorage laden und anzeigen
     loadMenuItems();
     
-    // Reorder-Modus prüfen und aktivieren
+    // Reorder-Modus prüfen (zum Neu-Anordnen der Kacheln)
     checkReorderMode();
   });
   
+  /* ========== REORDER MODE ========== */
+  /* Ermöglicht das Verschieben der Menu-Kacheln per Drag & Drop */
   function checkReorderMode() {
     const isReorderMode = localStorage.getItem('reorderMode') === 'true';
     if(isReorderMode) {
@@ -301,7 +322,7 @@
     }
   }
   
-  // Alle 500ms prüfen, ob sich der Modus geändert hat
+  // Alle 500ms prüfen, ob sich der Reorder-Modus geändert hat
   setInterval(() => {
     const isReorderMode = localStorage.getItem('reorderMode') === 'true';
     const hasClass = document.body.classList.contains('reorder-mode');
@@ -311,14 +332,14 @@
       initDragAndDrop();
     } else if(!isReorderMode && hasClass) {
       document.body.classList.remove('reorder-mode');
-      // Drag-Listener werden beim nächsten dragstart automatisch ignoriert
     }
   }, 500);
   
-  // Standard-Menü-Items
+  /* ========== MENU ITEMS KONFIGURATION ========== */
+  /* Standard-Kacheln für die Hauptseite */
   const defaultMenuItems = [
     { id: 'forum', text: 'Forum', link: 'forum.html', isLink: true },
-    { id: 'faecher', text: 'Fächer', link: 'faecher.html', isLink: true },
+    { id: 'faecher', text: 'Fächer', link: 'faecher_menu.html', isLink: true },
     { id: 'tipps', text: 'Tipps', link: 'tipps.html', isLink: true },
     { id: 'seelsorge', text: 'Seelsorge', link: 'seelsorge.html', isLink: true },
     { id: 'laester', text: 'Lästerecke', link: 'laesterecke.html', isLink: true },

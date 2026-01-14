@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forum – HFU Buddy</title>
+  <title>Allgemeine Psychologie – HFU Buddy</title>
   <!-- Google Fonts - Inder Schriftart -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link rel="icon" type="image/x-icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     /* ========== GLOBALE STYLES ========== */
     *{margin:0;padding:0;box-sizing:border-box;}
     
-    /* Body: Zentrierter Container mit Hintergrund */
     body{
       font-family:'Inder', sans-serif;
       background:#E7DBB5;
@@ -22,7 +21,6 @@
       position:relative;
     }
     
-    /* Hintergrundbild mit 30% Opazität */
     body::before{
       content:"";
       position:fixed;
@@ -36,8 +34,6 @@
       z-index:0;
     }
     
-    /* ========== PHONE CONTAINER ========== */
-    /* Handy-Display Simulation (375x667px) */
     .phone{
       width:100%;max-width:375px;
       height:100vh;max-height:667px;
@@ -48,8 +44,6 @@
       z-index:1;
     }
     
-    /* ========== TOP BAR ========== */
-    /* Obere Leiste mit Zurück-Button, Titel und Benachrichtigungen */
     .top-bar{
       position:relative;
       display:flex;
@@ -62,7 +56,6 @@
       backdrop-filter: blur(10px);
     }
     
-    /* Zurück-Pfeil Icon (links oben) */
     .back-icon{
       position:absolute;
       left:16px;
@@ -70,12 +63,13 @@
       cursor:pointer;
     }
     
-    /* "Forum" Titel in der Mitte */
     .top-title{
       font-weight:bold;
-      font-size:24px;
+      font-size:20px;
       color:#4A7856;
+      text-align:center;
     }
+    
     .notification-icon{
       position:absolute;
       right:20px;
@@ -86,13 +80,17 @@
       border-radius:6px;
       transition:all 0.2s ease;
     }
+    
     .notification-icon:hover{
       transform:translateY(-50%) scale(1.1);
       background:rgba(47, 127, 81, 0.1);
     }
+    
     .content{
       flex:1;padding:16px;overflow-y:auto;
     }
+    
+    /* ========== POST STYLES ========== */
     .post{
       margin-bottom:16px;
       border:1px solid #D2C79C;
@@ -104,19 +102,23 @@
       box-shadow:0 2px 4px rgba(0,0,0,0.05);
       position:relative;
     }
+    
     .post-header{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       margin-bottom:6px;
     }
+    
     .post-title-area{
       flex:1;
     }
+    
     .post-title{
       font-weight:bold;color:#2F5F3F;
       font-size:20px;
     }
+    
     .save-btn-top{
       border:none;background:none;
       cursor:pointer;
@@ -127,20 +129,25 @@
       align-items:center;
       justify-content:center;
     }
+    
     .save-btn-top:hover{
       transform:scale(1.15);
       background:rgba(47, 127, 81, 0.1);
     }
+    
     .post-author{
       font-size:15px;color:#4A6B51;margin-bottom:4px;
     }
+    
     .post-time{
       font-size:13px;color:#7A8B81;margin-bottom:8px;
     }
+    
     .post-text{
       font-size:16px;line-height:1.6;
       margin-bottom:12px;color:#2F5F3F;
     }
+    
     .post-actions{
       display:flex;
       justify-content:flex-end;
@@ -149,6 +156,7 @@
       padding-top:10px;
       border-top:1px solid #E7DBB5;
     }
+    
     .icon-btn{
       border:none;background:none;
       cursor:pointer;
@@ -160,13 +168,16 @@
       justify-content:center;
       gap:2px;
     }
+    
     .icon-btn:hover{
       transform:scale(1.15);
       background:rgba(47, 127, 81, 0.1);
     }
+    
     .icon-small{
       height:22px;width:auto;
     }
+    
     .votes, .comment-count{
       font-size:14px;color:#4A7856;
       font-weight:bold;
@@ -174,10 +185,13 @@
       text-align:center;
       padding:0 2px;
     }
+    
+    /* ========== PLUS BUTTON ========== */
     .plus{
       display:flex;justify-content:center;
       margin:8px 0 12px;
     }
+    
     .plus-circle{
       width:50px;height:50px;border-radius:50%;
       background:#4A7856;color:#E7DBB5;
@@ -187,10 +201,13 @@
       box-shadow:0 4px 6px rgba(0,0,0,0.2);
       transition:all 0.2s ease;
     }
+    
     .plus-circle:hover{
       background:#5A8866;
       transform:scale(1.05);
     }
+    
+    /* ========== BOTTOM BAR ========== */
     .bottom-bar{
       height:75px;
       background:rgba(231, 219, 181, 0.75);
@@ -199,9 +216,9 @@
       justify-content:space-evenly;
       align-items:center;
       border-top:1px solid #D2C79C;
-      padding:12px 0;
     }
-    .bottom-bar a{ 
+    
+    .bottom-bar a{
       text-decoration:none;
       padding:8px;
       border-radius:8px;
@@ -210,43 +227,40 @@
       align-items:center;
       justify-content:center;
     }
+    
     .bottom-bar a:hover{
       background:rgba(47, 127, 81, 0.1);
       transform:scale(1.1);
     }
-    .nav-icon{ height:36px;width:auto; }
-    @media(max-width:600px){
-      .phone{max-width:100%;height:100vh;max-height:none;}
-    }
+    
+    .nav-icon{height:36px;width:auto;}
   </style>
 </head>
 <body>
   <div class="phone">
     <div class="top-bar">
-      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
-      <div class="top-title">Forum</div>
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='faecher_menu.html'" style="cursor:pointer;">
+      <div class="top-title">Allgemeine Psychologie</div>
       <a href="forum_benachrichtigungen.html">
         <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
       </a>
     </div>
 
     <div class="content" id="posts-container">
-      <div class="post" data-votes="0" data-post-id="post-1">
+      <!-- Beispiel-Posts für Allgemeine Psychologie -->
+      <div class="post" data-votes="0" data-post-id="psycho-1">
         <div class="post-header">
           <div class="post-title-area">
-            <div class="post-title">Erlkönig Teil 1</div>
+            <div class="post-title">Wahrnehmungspsychologie</div>
           </div>
           <button class="icon-btn save-btn-top save-btn">
             <img src="gmerken.png" alt="Merken" class="icon-small">
           </button>
         </div>
-        <div class="post-author">von Johann</div>
-        <div class="post-time">vor 45min</div>
+        <div class="post-author">von PsychoStudent</div>
+        <div class="post-time">vor 2h</div>
         <div class="post-text">
-          Wer reitet so spät durch Nacht und Wind?<br>
-          Es ist der Vater mit seinem Kind;<br>
-          Er hat den Knaben wohl in dem Arm,<br>
-          Er fasst ihn sicher, er hält ihn warm.
+          Kann mir jemand die Gestaltgesetze erklären? Besonders das Gesetz der Nähe und der Ähnlichkeit verwirren mich noch.
         </div>
         <div class="post-actions">
           <button class="icon-btn comment-btn">
@@ -260,22 +274,19 @@
         </div>
       </div>
 
-      <div class="post" data-votes="0" data-post-id="post-2">
+      <div class="post" data-votes="0" data-post-id="psycho-2">
         <div class="post-header">
           <div class="post-title-area">
-            <div class="post-title">Erlkönig Teil 2</div>
+            <div class="post-title">Gedächtnismodelle</div>
           </div>
           <button class="icon-btn save-btn-top save-btn">
             <img src="gmerken.png" alt="Merken" class="icon-small">
           </button>
         </div>
-        <div class="post-author">von Wolfgang</div>
-        <div class="post-time">vor 2h</div>
+        <div class="post-author">von MemoryMaster</div>
+        <div class="post-time">vor 5h</div>
         <div class="post-text">
-          „Mein Sohn, was birgst du so bang dein Gesicht?" –<br>
-          „Siehst, Vater, du den Erlkönig nicht?<br>
-          Den Erlenkönig mit Kron' und Schweif?" –<br>
-          „Mein Sohn, es ist ein Nebelstreif."
+          Mehrspeichermodell vs. Arbeitsgedächtnismodell - was sind die wichtigsten Unterschiede für die Klausur?
         </div>
         <div class="post-actions">
           <button class="icon-btn comment-btn">
@@ -309,135 +320,66 @@
 
   <script>
     /* ========== NAVIGATION SETUP ========== */
-    /* Setze forumReferrer sofort beim Laden, damit Kommentare zurück zu Forum führen */
-    sessionStorage.setItem('forumReferrer', 'forum.html');
+    // Setzt forumReferrer auf diese Seite, damit Zurück-Button in Kommentaren hierher führt
+    sessionStorage.setItem('forumReferrer', 'fach_allgemeine_psychologie.html');
     
-    /* Plus-Button: Öffnet "Neuen Post erstellen" Seite */
+    /* ========== PLUS-BUTTON: NEUEN POST ERSTELLEN ========== */
     document.getElementById('plusBtn').addEventListener('click', function(e) {
-      localStorage.setItem('postSourcePage', 'forum'); // Merke, dass Post von Forum kommt
-      sessionStorage.setItem('forumReferrer', 'forum.html'); // Zurück-Navigation
+      localStorage.setItem('postSourcePage', 'psycho'); // Quell-Seite für neuen Post
+      sessionStorage.setItem('forumReferrer', 'fach_allgemeine_psychologie.html'); // Zurück-Navigation
     });
     
-    /* ========== FAKE KOMMENTARE INITIALISIEREN ========== */
-    /* Erstellt vordefinierte Kommentare für die Beispiel-Posts beim ersten Laden */
-    function initializeForumComments() {
-      const initialized = localStorage.getItem('forumCommentsInit');
-      if(initialized === 'true') return; // Bereits initialisiert, nichts tun
-      
-      const existingComments = localStorage.getItem('postComments');
-      const postComments = existingComments ? JSON.parse(existingComments) : {};
-      
-      // Post 1: "Erlkönig Teil 1" - 3 Kommentare
-      postComments["post-1"] = [
-        { id: 0, author: "LiteraturFan", text: "Eines der bekanntesten Gedichte überhaupt!", replies: [] },
-        { id: 1, author: "Goethe_Kenner", text: "Die Atmosphäre ist wirklich einzigartig.", replies: [] },
-        { id: 2, author: "SchülerHelfer", text: "Mussten wir auswendig lernen in der Schule", replies: [] }
-      ];
-      
-      // Post 2: "Erlkönig Teil 2" - 2 Kommentare
-      postComments["post-2"] = [
-        { id: 0, author: "DeutschProfi", text: "Der Dialog ist so meisterhaft geschrieben", replies: [] },
-        { id: 1, author: "Balladenfan", text: "Die Spannung steigt mit jeder Zeile!", replies: [] }
-      ];
-      
-      // Speichere Kommentare in localStorage
-      localStorage.setItem("postComments", JSON.stringify(postComments));
-      localStorage.setItem('forumCommentsInit', 'true'); // Markiere als initialisiert
-    }
-    
-    initializeForumComments(); // Fake-Kommentare beim Laden erstellen
-    
-    const container = document.getElementById("posts-container");
-
-    /* ========== NEUE POSTS LADEN ========== */
-    /* Lädt benutzerdefinierte Posts aus sessionStorage (erstellt in forum_posten.html) */
-    const newPostsRaw = sessionStorage.getItem('newPosts');
-    if(newPostsRaw) {
-      try {
-        const newPosts = JSON.parse(newPostsRaw);
-        // Nur Posts anzeigen, die von 'forum' Seite erstellt wurden
-        newPosts.forEach((p, index) => {
-          if(p.sourcePage === 'forum' || !p.sourcePage) {
-            const postId = 'new-forum-' + index;
-            const newPost = document.createElement('div');
-            newPost.className = 'post';
-            newPost.dataset.postId = postId;
-            newPost.dataset.votes = '0';
-            newPost.innerHTML = `
-              <div class="post-header">
-                <div class="post-title-area">
-                  <div class="post-title">${p.title || 'Neuer Post'}</div>
-                </div>
-                <button class="icon-btn save-btn-top save-btn">
-                  <img src="gmerken.png" alt="Merken" class="icon-small">
-                </button>
-              </div>
-              <div class="post-author">von ${p.name || 'Anonym'}</div>
-              <div class="post-time">vor 1min</div>
-              <div class="post-text">${p.text}</div>
-              <div class="post-actions">
-                <button class="icon-btn comment-btn">
-                  <img src="gkomm.png" alt="Kommentare" class="icon-small">
-                  <span class="comment-count">0</span>
-                </button>
-                <button class="icon-btn upvote-btn">
-                  <img src="gup.png" alt="Upvote" class="icon-small">
-                  <span class="votes">0</span>
-                </button>
-              </div>
-            `;
-            container.insertBefore(newPost, container.firstChild);
-          }
-        });
-      } catch(e) {}
-    }
+    const container = document.getElementById("posts-container"); // Container für alle Posts
 
     /* ========== KOMMENTAR-BUTTONS ========== */
-    /* Beim Klick auf Kommentar-Button: Öffne Kommentar-Ansicht */
+    // Event Listener für alle Kommentar-Buttons - navigiert zu Kommentarseite
     document.querySelectorAll(".comment-btn").forEach(btn => {
       btn.addEventListener("click", function() {
-        const post = this.closest(".post");
-        const postId = post.dataset.postId;
+        const post = this.closest(".post"); // Finde zugehörigen Post
+        const postId = post.dataset.postId; // Post-ID auslesen
         if(postId) {
-          localStorage.setItem("currentPostId", postId); // Speichere welcher Post angezeigt werden soll
-          sessionStorage.setItem('forumReferrer', 'forum.html'); // Zurück-Navigation zu Forum
-          sessionStorage.removeItem('fromNotification'); // Lösche Benachrichtigungs-Flag
-          window.location.href = "forum_kommentare.html"; // Öffne Kommentare
+          localStorage.setItem("currentPostId", postId); // ID speichern für Kommentarseite
+          sessionStorage.setItem('forumReferrer', 'fach_allgemeine_psychologie.html'); // Zurück hierher
+          sessionStorage.removeItem('fromNotification'); // Benachrichtigungs-Marker entfernen
+          window.location.href = "forum_kommentare.html"; // Navigation
         }
       });
     });
 
     /* ========== UPVOTE SYSTEM ========== */
-    /* Ermöglicht das Upvoten von Posts - Posts mit mehr Votes werden nach oben sortiert */
-    const posts = Array.from(container.querySelectorAll(".post"));
+    // Posts können upvoted werden und werden dann automatisch neu sortiert
+    const posts = Array.from(container.querySelectorAll(".post")); // Alle Posts als Array
     posts.forEach(post => {
       const btn = post.querySelector(".upvote-btn");
-      const votesSpan = post.querySelector(".votes");
+      const votesSpan = post.querySelector(".votes"); // Anzeige der Votes
       if(btn && votesSpan) {
         btn.addEventListener("click", () => {
-          // Erhöhe Vote-Zähler
+          // Vote-Zahl erhöhen
           let votes = parseInt(post.dataset.votes || "0", 10);
           votes++;
-          post.dataset.votes = votes;
-          votesSpan.textContent = votes;
+          post.dataset.votes = votes; // Im data-Attribut speichern
+          votesSpan.textContent = votes; // In UI anzeigen
           
-          // Sortiere Posts nach Votes (höchste zuerst)
+          // Posts neu sortieren (höchste Votes zuerst)
           const sorted = posts.slice().sort(
             (a,b)=>parseInt(b.dataset.votes||"0",10)-parseInt(a.dataset.votes||"0",10)
           );
-          sorted.forEach(p=>container.appendChild(p));
+          sorted.forEach(p=>container.appendChild(p)); // Neu sortiert einfügen
         });
       }
     });
 
+    /* ========== POST SPEICHERN ========== */
+    // Speichert Post-Daten in sessionStorage für "Gemerkte Posts" Seite
     function savePostData(title, author, text, postId){
       let saved=[];
       const raw=sessionStorage.getItem("savedPosts");
-      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} }
-      saved.push({title,author,text,postId});
-      sessionStorage.setItem("savedPosts",JSON.stringify(saved));
+      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} } // Bestehende laden
+      saved.push({title,author,text,postId}); // Neuen Post hinzufügen
+      sessionStorage.setItem("savedPosts",JSON.stringify(saved)); // Speichern
     }
     
+    // Event Listener für alle Speichern-Buttons
     container.querySelectorAll(".post .save-btn").forEach(saveBtn=>{
       saveBtn.addEventListener("click",function(){
         const post = this.closest(".post");
@@ -445,57 +387,56 @@
         const author=post.querySelector(".post-author").innerHTML;
         const text=post.querySelector(".post-text").innerHTML;
         const postId=post.dataset.postId;
-        savePostData(title,author,text,postId);
-        alert("Post gespeichert!");
+        savePostData(title,author,text,postId); // Funktion aufrufen
+        alert("Post gespeichert!"); // Bestätigung
       });
     });
 
     /* ========== BENACHRICHTIGUNGS-ICON & KOMMENTAR-ZÄHLER ========== */
-    /* Beim Laden der Seite: Icon aktualisieren und Kommentar-Counts berechnen */
     window.addEventListener("DOMContentLoaded", () => {
+      // Benachrichtigungs-Icon aktualisieren wenn Benachrichtigungen vorhanden
       const saved = localStorage.getItem("hasNotifications");
       if(saved === "true") {
         const icon = document.querySelector(".notification-icon");
-        if(icon) icon.src = "punkt.png"; // Roter Punkt bei neuen Benachrichtigungen
+        if(icon) icon.src = "punkt.png"; // Rotes Icon mit Punkt
       }
       
-      updateCommentCounts(); // Aktualisiere Kommentar-Zahlen
+      updateCommentCounts(); // Kommentar-Anzahl für alle Posts aktualisieren
     });
     
-    /* ========== KOMMENTAR-ZÄHLER AKTUALISIEREN ========== */
-    /* Liest aus localStorage wie viele Kommentare jeder Post hat und zeigt die Zahl an */
+    /* ========== KOMMENTAR-ANZAHL AKTUALISIEREN ========== */
+    // Liest aus localStorage wie viele Kommentare jeder Post hat und zeigt sie an
     function updateCommentCounts() {
       const postCommentsRaw = localStorage.getItem("postComments");
       if(!postCommentsRaw) return; // Keine Kommentare vorhanden
       
       try {
-        const postComments = JSON.parse(postCommentsRaw);
+        const postComments = JSON.parse(postCommentsRaw); // JSON parsen
         document.querySelectorAll(".post").forEach(post => {
           const postId = post.dataset.postId;
-          if(postId && postComments[postId]) {
+          if(postId && postComments[postId]) { // Falls Kommentare für diesen Post existieren
             const countSpan = post.querySelector(".comment-count");
             if(countSpan) {
-              // Zähle alle Kommentare + verschachtelte Antworten
-              countSpan.textContent = countAllComments(postComments[postId]);
+              countSpan.textContent = countAllComments(postComments[postId]); // Rekursiv zählen
             }
           }
         });
-      } catch(e) {}
+      } catch(e) {} // Bei Fehler ignorieren
     }
     
-    /* Rekursive Funktion: Zählt Kommentare + alle Antworten (Replies) */
+    /* ========== ALLE KOMMENTARE REKURSIV ZÄHLEN ========== */
+    // Zählt Kommentare + alle Antworten (und Antworten auf Antworten, etc.)
     function countAllComments(comments) {
-      let total = comments.length;
+      let total = comments.length; // Hauptkommentare
       comments.forEach(c => {
         if(c.replies && c.replies.length > 0) {
-          total += countAllComments(c.replies);
+          total += countAllComments(c.replies); // Rekursiv Antworten zählen
         }
       });
       return total;
     }
     
-    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
-    updateCommentCounts();
+    updateCommentCounts(); // Beim Laden ausführen
   </script>
 </body>
 </html>

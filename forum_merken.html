@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gemerkte Posts</title>
-  <link rel="icon" type="image/x-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -107,6 +107,7 @@
       background:rgba(245, 240, 220, 0.75);
       backdrop-filter: blur(5px);
       box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      position:relative;
     }
     .post-title{
       font-weight:bold;color:#4A7856;
@@ -118,6 +119,22 @@
     .post-text{
       font-size:15px;line-height:1.6;
       margin-bottom:12px;color:#4A7856;
+    }
+    
+    /* Merken-Icon oben rechts in gespeichertem Post */
+    .bookmark-icon-saved{
+      position:absolute;
+      top:14px;
+      right:14px;
+      height:24px;
+      width:auto;
+      cursor:pointer;
+      transition:all 0.2s ease;
+      opacity:0.7;
+    }
+    .bookmark-icon-saved:hover{
+      opacity:1;
+      transform:scale(1.1);
     }
 
     .bottom-bar{
@@ -178,9 +195,11 @@
   </div>
 
   <script>
+    /* ========== GESPEICHERTE POSTS LADEN UND ANZEIGEN ========== */
     const container = document.getElementById('saved-container');
-    const raw = sessionStorage.getItem('savedPosts');
+    const raw = sessionStorage.getItem('savedPosts'); // Gespeicherte Posts aus sessionStorage
 
+    // FALL 1: Keine gespeicherten Posts vorhanden
     if (!raw) {
       container.innerHTML = '<div class="empty-message">Noch keine gespeicherten Posts.</div>';
       container.style.display = 'flex';
@@ -188,49 +207,71 @@
       container.style.alignItems = 'center';
     } else {
       try {
-        const saved = JSON.parse(raw);
+        const saved = JSON.parse(raw); // JSON String in Array umwandeln
+        
+        // FALL 2: Array existiert, aber ist leer
         if (!saved.length) {
           container.innerHTML = '<div class="empty-message">Noch keine gespeicherten Posts.</div>';
           container.style.display = 'flex';
           container.style.justifyContent = 'center';
           container.style.alignItems = 'center';
         } else {
-          container.style.display = 'block';
-          saved.forEach(p => {
+          // FALL 3: Posts vorhanden - Liste anzeigen
+          container.style.display = 'block'; // Normal layout (nicht zentriert)
+          
+          // Für jeden gespeicherten Post ein HTML-Element erstellen
+          saved.forEach((p, index) => {
             const div = document.createElement('div');
             div.className = 'post';
-            div.style.cursor = 'pointer';
             div.innerHTML = `
-              <div class="post-title">${p.title}</div>
-              <div class="post-author">${p.author}</div>
-              <div class="post-text">${p.text}</div>
+              <img src="gmerken.png" alt="Merken entfernen" class="bookmark-icon-saved" data-index="${index}">
+              <div class="post-content" style="cursor:pointer;">
+                <div class="post-title">${p.title}</div>
+                <div class="post-author">${p.author}</div>
+                <div class="post-text">${p.text}</div>
+              </div>
             `;
             
-            // Klick-Event: Gehe zu den Kommentaren dieses Posts
-            if(p.postId) {
-              div.addEventListener('click', () => {
-                localStorage.setItem('currentPostId', p.postId);
-                sessionStorage.setItem('forumReferrer', 'forum.html');
-                window.location.href = 'forum_kommentare.html';
+            /* ========== BOOKMARK-ICON: POST ENTFERNEN ========== */
+            const bookmarkIcon = div.querySelector('.bookmark-icon-saved');
+            bookmarkIcon.addEventListener('click', (e) => {
+              e.stopPropagation(); // Verhindere Event-Bubbling (Klick geht nicht zum Parent)
+              
+              // Entferne Post aus Array an der entsprechenden Position
+              saved.splice(index, 1);
+              sessionStorage.setItem('savedPosts', JSON.stringify(saved));
+              
+              // Seite neu laden, um aktualisierte Liste anzuzeigen
+              window.location.reload();
+            });
+            
+            /* ========== POST-KLICK: ZU KOMMENTAREN NAVIGIEREN ========== */
+            const postContent = div.querySelector('.post-content');
+            if(p.postId) { // Nur wenn Post eine ID hat (für Navigation zu Kommentaren)
+              postContent.addEventListener('click', () => {
+                localStorage.setItem('currentPostId', p.postId); // Aktuelle Post-ID speichern
+                sessionStorage.setItem('forumReferrer', 'forum.html'); // Zurück-Navigation setzen
+                window.location.href = 'forum_kommentare.html'; // Zu Kommentarseite navigieren
               });
             }
             
-            container.appendChild(div);
+            container.appendChild(div); // Post zum Container hinzufügen
           });
         }
       } catch(e){
+        // Fehlerbehandlung: Falls JSON parsing fehlschlägt
         container.innerHTML = '<p>Fehler beim Laden der gespeicherten Posts.</p>';
       }
     }
   </script>
   
   <script>
-    // Benachrichtigungs-Icon aktualisieren
+    /* ========== BENACHRICHTIGUNGS-ICON AKTUALISIEREN ========== */
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('hasNotifications');
       if(saved === 'true') {
         const icon = document.querySelector('.notification-icon');
-        if(icon) icon.src = 'punkt.png';
+        if(icon) icon.src = 'punkt.png'; // Rotes Icon mit Benachrichtigungs-Punkt
       }
     });
   </script>

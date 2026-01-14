@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neuer Post</title>
-  <link rel="icon" type="image/x-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -207,49 +207,58 @@
   </div>
 
   <script>
-    const publishBtn = document.getElementById('publishBtn');
-    const titleInput = document.getElementById('titleInput');
-    const nameInput  = document.getElementById('nameInput');
-    const textInput  = document.getElementById('textInput');
+    /* ========== DOM ELEMENTE REFERENZIEREN ========== */
+    const publishBtn = document.getElementById('publishBtn'); // "Veröffentlichen" Button
+    const titleInput = document.getElementById('titleInput'); // Thema/Titel Eingabe
+    const nameInput  = document.getElementById('nameInput');  // Name Eingabe
+    const textInput  = document.getElementById('textInput');  // Nachricht Textarea
 
+    /* ========== POST VERÖFFENTLICHEN ========== */
+    // Event Listener für Veröffentlichen-Button
     publishBtn.addEventListener('click', () => {
+      // Eingabewerte auslesen und trimmen
       const title = titleInput.value.trim();
-      const name  = nameInput.value.trim() || 'Anon';
-      const text  = textInput.value.trim().replace(/\n/g, '<br>');
+      const name  = nameInput.value.trim() || 'Anon'; // Falls leer: 'Anon'
+      const text  = textInput.value.trim().replace(/\n/g, '<br>'); // Zeilenumbrüche in HTML umwandeln
 
+      // Validierung: Titel und Text müssen ausgefüllt sein
       if (!title || !text) {
         alert('Bitte Thema und Nachricht ausfüllen.');
         return;
       }
 
-      // Welche Seite hat uns hierher geschickt?
+      // Von welcher Seite kamen wir? (forum, faecher, etc.)
       const sourcePage = localStorage.getItem('postSourcePage') || 'forum';
 
+      // Neue Posts aus sessionStorage laden (oder leeres Array erstellen)
       let newPosts = [];
       const raw = sessionStorage.getItem('newPosts');
       if (raw) {
         try { newPosts = JSON.parse(raw); } catch(e){ newPosts = []; }
       }
 
+      // Neuen Post zur Liste hinzufügen
       newPosts.push({ title, name, text, sourcePage });
       sessionStorage.setItem('newPosts', JSON.stringify(newPosts));
       
-      // Zurück zur richtigen Seite
+      // Zurück zur Quell-Seite (z.B. forum.html, faecher.html)
       window.location.href = sourcePage + '.html';
     });
 
-    // Zurück-Button zur richtigen Forum-Seite
+    /* ========== ZURÜCK-BUTTON ========== */
+    // Geht zur Seite zurück von der wir kamen (über forumReferrer)
     document.getElementById('backBtn').addEventListener('click', () => {
       const referrer = sessionStorage.getItem('forumReferrer') || 'forum.html';
       window.location.href = referrer;
     });
     
-    // Benachrichtigungs-Icon aktualisieren
+    /* ========== BENACHRICHTIGUNGS-ICON AKTUALISIEREN ========== */
+    // Prüft beim Laden ob Benachrichtigungen vorhanden sind und ändert Icon
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('hasNotifications');
       if(saved === 'true') {
         const icon = document.querySelector('.notification-icon');
-        if(icon) icon.src = 'punkt.png';
+        if(icon) icon.src = 'punkt.png'; // Rotes Icon mit Punkt
       }
     });
   </script>

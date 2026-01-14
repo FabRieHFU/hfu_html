@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benachrichtigungen</title>
-  <link rel="icon" type="image/x-icon" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -65,11 +65,6 @@
       color:#4A7856;
     }
 
-    .content{
-      flex:1;padding:20px;
-      display:flex;justify-content:center;align-items:center;
-    }
-    
     .empty-message{
       font-size:18px;
       color:#4A7856;
@@ -124,6 +119,10 @@
       padding:16px;
       overflow-y:auto;
       flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
     }
 
     .bottom-bar{
@@ -181,9 +180,11 @@
   </div>
   
   <script>
+    /* ========== BENACHRICHTIGUNGEN LADEN UND ANZEIGEN ========== */
     const container = document.getElementById('notifications-container');
     
     function loadNotifications() {
+      // Benachrichtigungen aus localStorage laden
       const saved = localStorage.getItem('notifications');
       let notifications = [];
       
@@ -191,45 +192,55 @@
         try { notifications = JSON.parse(saved); } catch(e) { notifications = []; }
       }
       
+      // FALL 1: Keine Benachrichtigungen vorhanden
       if(notifications.length === 0) {
         container.innerHTML = `
-          <div class="content">
-            <div class="empty-message">
-              Noch keine Meldungen vorhanden.
-            </div>
+          <div class="empty-message">
+            Noch keine Meldungen vorhanden.
           </div>
         `;
-        return;
+        return; // Funktion beenden
       }
       
-      container.innerHTML = '';
+      // FALL 2: Benachrichtigungen vorhanden - Liste anzeigen
+      container.style.justifyContent = 'flex-start'; // Liste oben beginnen lassen
+      container.innerHTML = ''; // Container leeren
+      
+      // Neueste zuerst anzeigen (Array umkehren)
       notifications.reverse().forEach(notif => {
+        // Für jede Benachrichtigung ein anklickbares Element erstellen
         const item = document.createElement('a');
         item.className = 'notification-item';
-        item.href = notif.link || 'forum_kommentare.html';
+        item.href = notif.link || 'forum_kommentare.html'; // Standard-Link falls nicht gesetzt
         item.innerHTML = `
           <div class="notification-title">${notif.message}</div>
           <div class="notification-text">Von: ${notif.author}</div>
           <div class="notification-time">${notif.timestamp}</div>
         `;
-        // Markiere Navigation von Benachrichtigung - beim Zurück soll direkt zur Forum-Seite
+        
+        /* ========== CLICK: NAVIGATION MIT KONTEXT ========== */
+        // Beim Klick auf Benachrichtigung: Marker setzen für Navigation
         item.addEventListener('click', () => {
-          sessionStorage.setItem('fromNotification', 'true');
-          // Setze forumReferrer auf die Quell-Seite der Benachrichtigung
+          sessionStorage.setItem('fromNotification', 'true'); // Marker: Kam von Benachrichtigung
+          
+          // Setze forumReferrer auf Quell-Seite der Benachrichtigung
           if(notif.sourcePage) {
             sessionStorage.setItem('forumReferrer', notif.sourcePage + '.html');
           } else {
-            sessionStorage.setItem('forumReferrer', 'faecher.html');
+            sessionStorage.setItem('forumReferrer', 'faecher.html'); // Fallback
           }
         });
-        container.appendChild(item);
+        
+        container.appendChild(item); // Benachrichtigung zum Container hinzufügen
       });
     }
     
-    loadNotifications();
+    loadNotifications(); // Funktion ausführen
     
-    // Benachrichtigungen als gelesen markieren - Icon auf allen Seiten zurücksetzen
-    localStorage.setItem('hasNotifications', 'false');
+    /* ========== BENACHRICHTIGUNGEN ALS GELESEN MARKIEREN ========== */
+    // Sobald User die Benachrichtigungsseite öffnet, alle als gelesen markieren
+    localStorage.setItem('hasNotifications', 'false'); // Flag zurücksetzen
+    // Icon auf allen anderen Seiten wird beim nächsten Laden wieder normal sein
   </script>
 </body>
 </html>

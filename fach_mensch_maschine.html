@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensch-Maschine – HFU Buddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+   <link rel="icon" type="image/x-icon" href="logo.png">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inder', sans-serif;background:#E7DBB5;display:flex;justify-content:center;align-items:center;min-height:100vh;position:relative;}
+    body::before{content:"";position:fixed;top:0;left:0;width:100%;height:100%;background-image:url('Hintergrund.png');background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0.3;z-index:0;}
+    .phone{width:100%;max-width:375px;height:100vh;max-height:667px;background:rgba(231, 219, 181, 0.95);display:flex;flex-direction:column;box-shadow:0 4px 6px rgba(0,0,0,0.1);position:relative;z-index:1;}
+    .top-bar{position:relative;display:flex;justify-content:center;align-items:center;padding:16px;min-height:56px;border-bottom:1px solid #D2C79C;background:rgba(231, 219, 181, 0.8);backdrop-filter: blur(10px);}
+    .back-icon{position:absolute;left:16px;height:20px;cursor:pointer;}
+    .top-title{font-weight:bold;font-size:20px;color:#4A7856;text-align:center;}
+    .notification-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);height:30px;cursor:pointer;border-radius:6px;transition:all 0.2s ease;}
+    .notification-icon:hover{transform:translateY(-50%) scale(1.1);background:rgba(47, 127, 81, 0.1);}
+    .content{flex:1;padding:16px;overflow-y:auto;}
+    .post{margin-bottom:16px;border:1px solid #D2C79C;border-radius:8px;padding:14px;padding-bottom:50px;background:rgba(245, 240, 220, 0.75);backdrop-filter: blur(5px);box-shadow:0 2px 4px rgba(0,0,0,0.05);position:relative;}
+    .post-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+    .post-title-area{flex:1;}
+    .post-title{font-weight:bold;color:#2F5F3F;font-size:20px;}
+    .save-btn-top{border:none;background:none;cursor:pointer;padding:4px;transition:all 0.2s ease;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+    .save-btn-top:hover{transform:scale(1.15);background:rgba(47, 127, 81, 0.1);}
+    .post-author{font-size:15px;color:#4A6B51;margin-bottom:4px;}
+    .post-time{font-size:13px;color:#7A8B81;margin-bottom:8px;}
+    .post-text{font-size:16px;line-height:1.6;margin-bottom:12px;color:#2F5F3F;}
+    .post-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding-top:10px;border-top:1px solid #E7DBB5;}
+    .icon-btn{border:none;background:none;cursor:pointer;padding:2px;transition:all 0.2s ease;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:2px;}
+    .icon-btn:hover{transform:scale(1.15);background:rgba(47, 127, 81, 0.1);}
+    .icon-small{height:22px;width:auto;}
+    .votes, .comment-count{font-size:14px;color:#4A7856;font-weight:bold;min-width:20px;text-align:center;padding:0 2px;}
+    .plus{display:flex;justify-content:center;margin:8px 0 12px;}
+    .plus-circle{width:50px;height:50px;border-radius:50%;background:#4A7856;color:#E7DBB5;display:flex;justify-content:center;align-items:center;font-size:30px;cursor:pointer;text-decoration:none;box-shadow:0 4px 6px rgba(0,0,0,0.2);transition:all 0.2s ease;}
+    .plus-circle:hover{background:#5A8866;transform:scale(1.05);}
+    .bottom-bar{height:75px;background:rgba(231, 219, 181, 0.75);backdrop-filter: blur(10px);display:flex;justify-content:space-evenly;align-items:center;border-top:1px solid #D2C79C;}
+    .bottom-bar a{text-decoration:none;padding:8px;border-radius:8px;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;}
+    .bottom-bar a:hover{background:rgba(47, 127, 81, 0.1);transform:scale(1.1);}
+    .nav-icon{height:36px;width:auto;}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='faecher_menu.html'" style="cursor:pointer;">
+      <div class="top-title">Mensch-Maschine</div>
+      <a href="forum_benachrichtigungen.html"><img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon"></a>
+    </div>
+
+    <div class="content" id="posts-container">
+      <div class="post" data-votes="0" data-post-id="mm-1">
+        <div class="post-header">
+          <div class="post-title-area"><div class="post-title">Usability-Kriterien</div></div>
+          <button class="icon-btn save-btn-top save-btn"><img src="gmerken.png" alt="Merken" class="icon-small"></button>
+        </div>
+        <div class="post-author">von UXDesigner</div>
+        <div class="post-time">vor 2h</div>
+        <div class="post-text">Kann mir jemand die 7 Dialog-Prinzipien nach ISO 9241-110 nochmal erklären?</div>
+        <div class="post-actions">
+          <button class="icon-btn comment-btn"><img src="gkomm.png" alt="Kommentare" class="icon-small"><span class="comment-count">0</span></button>
+          <button class="icon-btn upvote-btn"><img src="gup.png" alt="Upvote" class="icon-small"><span class="votes">0</span></button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="0" data-post-id="mm-2">
+        <div class="post-header">
+          <div class="post-title-area"><div class="post-title">Fitts' Law</div></div>
+          <button class="icon-btn save-btn-top save-btn"><img src="gmerken.png" alt="Merken" class="icon-small"></button>
+        </div>
+        <div class="post-author">von InteractionPro</div>
+        <div class="post-time">vor 6h</div>
+        <div class="post-text">Praktische Beispiele für Fitts' Law in modernen Interfaces? Brauche das für mein Projekt.</div>
+        <div class="post-actions">
+          <button class="icon-btn comment-btn"><img src="gkomm.png" alt="Kommentare" class="icon-small"><span class="comment-count">0</span></button>
+          <button class="icon-btn upvote-btn"><img src="gup.png" alt="Upvote" class="icon-small"><span class="votes">0</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus"><a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a></div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html"><img src="geinstellungen.png" alt="Einstellungen" class="nav-icon"></a>
+      <a href="index.html"><img src="ghome.png" alt="Home" class="nav-icon"></a>
+      <a href="forum_merken.html"><img src="gmerken.png" alt="Merken" class="nav-icon"></a>
+    </div>
+  </div>
+
+  <script>
+    sessionStorage.setItem('forumReferrer', 'fach_mensch_maschine.html');
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'mm');
+      sessionStorage.setItem('forumReferrer', 'fach_mensch_maschine.html');
+    });
+    
+    const container = document.getElementById("posts-container");
+    document.querySelectorAll(".comment-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const post = this.closest(".post");
+        const postId = post.dataset.postId;
+        if(postId) {
+          localStorage.setItem("currentPostId", postId);
+          sessionStorage.setItem('forumReferrer', 'fach_mensch_maschine.html');
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = "forum_kommentare.html";
+        }
+      });
+    });
+
+    const posts = Array.from(container.querySelectorAll(".post"));
+    posts.forEach(post => {
+      const btn = post.querySelector(".upvote-btn");
+      const votesSpan = post.querySelector(".votes");
+      if(btn && votesSpan) {
+        btn.addEventListener("click", () => {
+          let votes = parseInt(post.dataset.votes || "0", 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          const sorted = posts.slice().sort((a,b)=>parseInt(b.dataset.votes||"0",10)-parseInt(a.dataset.votes||"0",10));
+          sorted.forEach(p=>container.appendChild(p));
+        });
+      }
+    });
+
+    function savePostData(title, author, text, postId){
+      let saved=[];
+      const raw=sessionStorage.getItem("savedPosts");
+      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} }
+      saved.push({title,author,text,postId});
+      sessionStorage.setItem("savedPosts",JSON.stringify(saved));
+    }
+    
+    container.querySelectorAll(".post .save-btn").forEach(saveBtn=>{
+      saveBtn.addEventListener("click",function(){
+        const post = this.closest(".post");
+        const title=post.querySelector(".post-title").innerHTML;
+        const author=post.querySelector(".post-author").innerHTML;
+        const text=post.querySelector(".post-text").innerHTML;
+        const postId=post.dataset.postId;
+        savePostData(title,author,text,postId);
+        alert("Post gespeichert!");
+      });
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("hasNotifications");
+      if(saved === "true") {
+        const icon = document.querySelector(".notification-icon");
+        if(icon) icon.src = "punkt.png";
+      }
+      updateCommentCounts();
+    });
+    
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem("postComments");
+      if(!postCommentsRaw) return;
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        document.querySelectorAll(".post").forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector(".comment-count");
+            if(countSpan) {
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies);
+        }
+      });
+      return total;
+    }
+  </script>
+</body>
+</html>

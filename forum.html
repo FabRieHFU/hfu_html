@@ -7,7 +7,6 @@
   <!-- Google Fonts - Inder Schriftart -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link rel="icon" type="image/x-icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     /* ========== GLOBALE STYLES ========== */
@@ -174,22 +173,37 @@
       text-align:center;
       padding:0 2px;
     }
+    
+    /* ========== POST IMAGE STYLES ========== */
+    .post-image{
+      width:100%;
+      max-width:300px;
+      height:auto;
+      border-radius:8px;
+      margin:12px 0;
+      display:block;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      transition:all 0.3s ease;
+    }
+    .post-image:hover{
+      transform:scale(1.05);
+      box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    }
+    
     .plus{
       display:flex;justify-content:center;
       margin:8px 0 12px;
     }
-    .plus-circle{
-      width:50px;height:50px;border-radius:50%;
-      background:#4A7856;color:#E7DBB5;
-      display:flex;justify-content:center;align-items:center;
-      font-size:30px;cursor:pointer;
-      text-decoration:none;
-      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+    .plus-btn-img{
+      height:50px;
+      width:auto;
+      cursor:pointer;
       transition:all 0.2s ease;
+      filter:drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
-    .plus-circle:hover{
-      background:#5A8866;
+    .plus-btn-img:hover{
       transform:scale(1.05);
+      filter:drop-shadow(0 6px 8px rgba(0,0,0,0.3));
     }
     .bottom-bar{
       height:75px;
@@ -231,7 +245,8 @@
     </div>
 
     <div class="content" id="posts-container">
-      <div class="post" data-votes="0" data-post-id="post-1">
+      <!-- Erlkönig Post 1 -->
+      <div class="post" data-votes="0" data-post-id="post-2">
         <div class="post-header">
           <div class="post-title-area">
             <div class="post-title">Erlkönig Teil 1</div>
@@ -260,7 +275,7 @@
         </div>
       </div>
 
-      <div class="post" data-votes="0" data-post-id="post-2">
+      <div class="post" data-votes="0" data-post-id="post-3">
         <div class="post-header">
           <div class="post-title-area">
             <div class="post-title">Erlkönig Teil 2</div>
@@ -290,8 +305,11 @@
       </div>
     </div>
 
+    <!-- ========== PLUS BUTTON - Neuen Post erstellen ========== -->
     <div class="plus">
-      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+      <a href="forum_posten.html" id="plusBtn">
+        <img src="plus.png" alt="Neuer Post" class="plus-btn-img">
+      </a>
     </div>
 
     <div class="bottom-bar">
@@ -327,15 +345,21 @@
       const existingComments = localStorage.getItem('postComments');
       const postComments = existingComments ? JSON.parse(existingComments) : {};
       
-      // Post 1: "Erlkönig Teil 1" - 3 Kommentare
+      // Post 1: "Neuer Post-Button" - 2 Kommentare
       postComments["post-1"] = [
+        { id: 0, author: "DesignLover", text: "Cool, der Button sieht super aus! 😊", replies: [] },
+        { id: 1, author: "NewUser", text: "Danke für die Erklärung, jetzt weiß ich wie es geht!", replies: [] }
+      ];
+      
+      // Post 2: "Erlkönig Teil 1" - 3 Kommentare
+      postComments["post-2"] = [
         { id: 0, author: "LiteraturFan", text: "Eines der bekanntesten Gedichte überhaupt!", replies: [] },
         { id: 1, author: "Goethe_Kenner", text: "Die Atmosphäre ist wirklich einzigartig.", replies: [] },
         { id: 2, author: "SchülerHelfer", text: "Mussten wir auswendig lernen in der Schule", replies: [] }
       ];
       
-      // Post 2: "Erlkönig Teil 2" - 2 Kommentare
-      postComments["post-2"] = [
+      // Post 3: "Erlkönig Teil 2" - 2 Kommentare
+      postComments["post-3"] = [
         { id: 0, author: "DeutschProfi", text: "Der Dialog ist so meisterhaft geschrieben", replies: [] },
         { id: 1, author: "Balladenfan", text: "Die Spannung steigt mit jeder Zeile!", replies: [] }
       ];

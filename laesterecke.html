@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
-   <link rel="icon" type="image/x-icon" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -130,18 +129,16 @@
       display:flex;justify-content:center;
       margin:8px 0 12px;
     }
-    .plus-circle{
-      width:48px;height:48px;border-radius:50%;
-      background:#4A7856;color:#E7DBB5;
-      display:flex;justify-content:center;align-items:center;
-      font-size:28px;cursor:pointer;
-      text-decoration:none;
-      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+    .plus-btn-img{
+      height:50px;
+      width:auto;
+      cursor:pointer;
       transition:all 0.2s ease;
+      filter:drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     }
-    .plus-circle:hover{
-      background:#5A8866;
+    .plus-btn-img:hover{
       transform:scale(1.05);
+      filter:drop-shadow(0 6px 8px rgba(0,0,0,0.3));
     }
     .bottom-bar{
       height:75px;
@@ -273,7 +270,9 @@ tat's um des Reimes willen.</div>
     </div>
 
     <div class="plus">
-      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+      <a href="forum_posten.html" id="plusBtn">
+        <img src="plus.png" alt="Plus" class="plus-btn-img">
+      </a>
     </div>
 
     <div class="bottom-bar">

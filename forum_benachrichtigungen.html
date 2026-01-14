@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benachrichtigungen</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Inder', sans-serif;
       background:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
       min-height:100vh;
@@ -156,9 +159,7 @@
 <body>
   <div class="phone">
     <div class="top-bar">
-      <a href="index.html">
-        <img src="gback.png" alt="Zurück" class="back-icon">
-      </a>
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
       <div class="top-title">Benachrichtigungen</div>
     </div>
 
@@ -211,6 +212,16 @@
           <div class="notification-text">Von: ${notif.author}</div>
           <div class="notification-time">${notif.timestamp}</div>
         `;
+        // Markiere Navigation von Benachrichtigung - beim Zurück soll direkt zur Forum-Seite
+        item.addEventListener('click', () => {
+          sessionStorage.setItem('fromNotification', 'true');
+          // Setze forumReferrer auf die Quell-Seite der Benachrichtigung
+          if(notif.sourcePage) {
+            sessionStorage.setItem('forumReferrer', notif.sourcePage + '.html');
+          } else {
+            sessionStorage.setItem('forumReferrer', 'faecher.html');
+          }
+        });
         container.appendChild(item);
       });
     }

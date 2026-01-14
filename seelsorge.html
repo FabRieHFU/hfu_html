@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seelsorge</title>
+  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inder', sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:transparent;
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;z-index:1;
+    }
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    .back-icon{
+      position:absolute;left:16px;
+      height:20px;width:auto;cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;font-size:24px;color:#4A7856;
+    }
+    .notification-icon{
+      position:absolute;right:20px;top:50%;
+      transform:translateY(-50%);
+      height:30px;width:auto;cursor:pointer;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .content{
+      flex:1;padding:16px;overflow-y:auto;
+    }
+    .post{
+      background:rgba(245, 240, 220, 0.75);
+      backdrop-filter: blur(5px);
+      padding:16px;
+      padding-bottom:50px;
+      border-radius:8px;
+      margin-bottom:16px;
+      position:relative;
+    }
+    .post-header{
+      display:flex;justify-content:space-between;
+      align-items:flex-start;margin-bottom:12px;
+    }
+    .post-author{
+      font-weight:bold;font-size:16px;color:#4A7856;
+    }
+    .post-time{
+      font-size:13px;color:#8B8B6B;
+    }
+    .post-content{
+      font-size:15px;color:#4A7856;
+      line-height:1.6;margin-bottom:8px;
+      white-space: pre-line;
+    }
+    .post-actions{
+      display:flex;gap:8px;align-items:center;
+      position:absolute;bottom:12px;right:12px;
+    }
+    .action-btn{
+      display:flex;align-items:center;gap:2px;
+      background:none;border:none;
+      color:#4A7856;cursor:pointer;
+      font-size:14px;padding:4px;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .action-btn:hover{
+      background:rgba(74, 120, 86, 0.1);
+      transform:scale(1.05);
+    }
+    .action-icon{height:20px;width:auto;}
+    .bookmark-icon{
+      position:absolute;top:16px;right:16px;
+      height:24px;width:auto;cursor:pointer;
+      transition:all 0.2s ease;
+    }
+    .bookmark-icon:hover{
+      transform:scale(1.1);
+    }
+    .votes{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+      min-width:20px;
+    }
+    .comment-count{
+      font-size:14px;
+      color:#4A7856;
+      font-weight:bold;
+    }
+    .plus{
+      display:flex;justify-content:center;
+      margin:8px 0 12px;
+    }
+    .plus-circle{
+      width:48px;height:48px;border-radius:50%;
+      background:#4A7856;color:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      font-size:28px;cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+      transition:all 0.2s ease;
+    }
+    .plus-circle:hover{
+      background:#5A8866;
+      transform:scale(1.05);
+    }
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;padding:8px;
+      border-radius:8px;transition:all 0.2s ease;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{height:36px;width:auto;}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
+      <div class="top-title">Seelsorge</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="content">
+      <div class="post" data-votes="89" data-post-id="seelsorge-1">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">Hoffnungsvoll</div>
+            <div class="post-time">vor 1h</div>
+          </div>
+        </div>
+        <div class="post-content">Stufen - Hermann Hesse
+
+Wie jede Blüte welkt und jede Jugend
+Dem Alter weicht, blüht jede Lebensstufe,
+Blüht jede Weisheit auch und jede Tugend
+Zu ihrer Zeit und darf nicht ewig dauern.
+
+Es muß das Herz bei jedem Lebensrufe
+Bereit zum Abschied sein und Neubeginne,
+Um sich in Tapferkeit und ohne Trauern
+In andre, neue Bindungen zu geben.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">0</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">89</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="67" data-post-id="seelsorge-2">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">StilleStärke</div>
+            <div class="post-time">vor 3h</div>
+          </div>
+        </div>
+        <div class="post-content">Trost - Joseph von Eichendorff
+
+Was klagst du, Freund, der Welt so sehr,
+Als wär's so schwer, das Leben?
+Der liebe Gott im Himmel hehr
+Hat's allen so gegeben.
+
+Manch Stündlein mag wohl traurig sein,
+Doch stets am letzten Ende,
+Liegt's in des Herren Gottes Hand,
+Mit Augen, welche die Welt empfangen.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">0</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">76</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="102" data-post-id="seelsorge-3">
+        <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+        <div class="post-header">
+          <div>
+            <div class="post-author">Lebensfreude</div>
+            <div class="post-time">vor 6h</div>
+          </div>
+        </div>
+        <div class="post-content">An mich selbst - Rainer Maria Rilke
+
+Du musst das Leben nicht verstehen,
+dann wird es werden wie ein Fest.
+Und lass dir jeden Tag geschehen
+so wie ein Kind im Weitergehen
+von jedem Wehen
+sich viele Blüten schenken lässt.
+
+Sie aufzusammeln und zu sparen,
+das kommt dem Kind nicht in den Sinn.</div>
+        <div class="post-actions">
+          <button class="action-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="action-icon">
+            <span class="comment-count">0</span>
+          </button>
+          <button class="action-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="action-icon">
+            <span class="votes">102</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus">
+      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'seelsorge');
+      sessionStorage.setItem('forumReferrer', 'seelsorge.html');
+    });
+    
+    // Fake-Kommentare für Seelsorge (2-3 pro Post)
+    function initializeSeelsorgeComments() {
+      const initialized = localStorage.getItem('seelsorgeCommentsInit');
+      if(initialized === 'true') return;
+      
+      const existingComments = localStorage.getItem('postComments');
+      const postComments = existingComments ? JSON.parse(existingComments) : {};
+      
+      postComments["seelsorge-1"] = [
+        { id: 0, author: "Lebensfreude", text: "Hesse hat einfach eine beruhigende Wirkung", replies: [] },
+        { id: 1, author: "Philosophie_Fan", text: "Jede Stufe ist ein neuer Anfang - wunderbar!", replies: [] }
+      ];
+      
+      postComments["seelsorge-2"] = [
+        { id: 0, author: "Hope_Seeker", text: "Dieser Trost in Worten... einfach schön", replies: [] },
+        { id: 1, author: "Poet_Soul", text: "Gerade in schweren Zeiten wichtig", replies: [] },
+        { id: 2, author: "Herz_und_Verstand", text: "Eichendorff berührt die Seele", replies: [] }
+      ];
+      
+      postComments["seelsorge-3"] = [
+        { id: 0, author: "Selbstliebe_Guru", text: "Sich selbst zu lieben ist der erste Schritt!", replies: [] },
+        { id: 1, author: "Achtsamkeit_Pro", text: "Sehr inspirierend geschrieben", replies: [] }
+      ];
+      
+      localStorage.setItem("postComments", JSON.stringify(postComments));
+      localStorage.setItem('seelsorgeCommentsInit', 'true');
+    }
+    
+    initializeSeelsorgeComments();
+    
+    const container = document.querySelector('.content');
+    
+    // Neue Posts laden (nur für diese Seite)
+    const newPostsRaw = sessionStorage.getItem('newPosts');
+    if(newPostsRaw) {
+      try {
+        const newPosts = JSON.parse(newPostsRaw);
+        newPosts.forEach((p, index) => {
+          if(p.sourcePage === 'seelsorge') {
+            const postId = 'new-seelsorge-' + index;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.dataset.postId = postId;
+            newPost.dataset.votes = '0';
+            newPost.innerHTML = `
+              <img src="gmerken.png" alt="Merken" class="bookmark-icon">
+              <div class="post-header">
+                <span class="post-author">${p.name || 'Anonym'}</span>
+              </div>
+              <div class="post-time">vor 1min</div>
+              <div class="post-title">${p.title || 'Neuer Post'}</div>
+              <div class="post-content">${p.text}</div>
+              <div class="post-actions">
+                <button class="action-btn comment-btn">
+                  <img src="gkomm.png" alt="Kommentare" class="action-icon">
+                  <span class="comment-count">0</span>
+                </button>
+                <button class="action-btn upvote-btn">
+                  <img src="gup.png" alt="Upvote" class="action-icon">
+                  <span class="votes">0</span>
+                </button>
+              </div>
+            `;
+            container.insertBefore(newPost, container.firstChild);
+          }
+        });
+      } catch(e) {}
+    }
+    
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const post = this.closest('.post');
+        const postId = post.dataset.postId;
+        if(postId) {
+          localStorage.setItem('currentPostId', postId);
+          // Speichere aktuelle Seite als Referrer für korrekte Zurück-Navigation
+          sessionStorage.setItem('forumReferrer', 'seelsorge.html');
+          // Lösche fromNotification-Flag, da wir direkt vom Forum kommen
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = 'forum_kommentare.html';
+        }
+      });
+    });
+    
+    const posts = Array.from(container.querySelectorAll('.post'));
+    posts.forEach(post => {
+      if(!post.dataset.votes) {
+        post.dataset.votes = post.querySelector('.votes') ? post.querySelector('.votes').textContent : '0';
+      }
+      
+      const btn = post.querySelector('.upvote-btn');
+      const votesSpan = post.querySelector('.votes');
+      if(btn && votesSpan) {
+        btn.addEventListener('click', () => {
+          let votes = parseInt(post.dataset.votes || '0', 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          
+          const sorted = posts.slice().sort(
+            (a,b) => parseInt(b.dataset.votes||'0',10) - parseInt(a.dataset.votes||'0',10)
+          );
+          sorted.forEach(p => container.appendChild(p));
+        });
+      }
+    });
+
+    function savePostData(author, text) {
+      let saved = [];
+      const raw = sessionStorage.getItem('savedPosts');
+      if(raw) { try { saved = JSON.parse(raw); } catch(e) { saved = []; } }
+      saved.push({title: 'Seelsorge Post', author, text});
+      sessionStorage.setItem('savedPosts', JSON.stringify(saved));
+    }
+    
+    container.querySelectorAll('.post').forEach(post => {
+      const saveBtn = post.querySelector('.bookmark-icon');
+      if(saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          const author = post.querySelector('.post-author').textContent;
+          const text = post.querySelector('.post-content').textContent;
+          savePostData(author, text);
+          alert('Post gespeichert!');
+        });
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png';
+      }
+      
+      updateCommentCounts();
+    });
+    
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem('postComments');
+      if(!postCommentsRaw) return;
+      
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        document.querySelectorAll('.post').forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector('.comment-count');
+            if(countSpan) {
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies);
+        }
+      });
+      return total;
+    }
+
+    /* ========== FAKE KOMMENTARE FÜR SEELSORGE ========== */
+    function initializeSeelsorgeComments() {
+      const initialized = localStorage.getItem('seelsorgeCommentsInit');
+      if(initialized === 'true') return;
+
+      const existingComments = localStorage.getItem('postComments');
+      const postComments = existingComments ? JSON.parse(existingComments) : {};
+
+      // Fake Kommentare für "Stufen" (seelsorge-1) - 2 Kommentare
+      postComments['seelsorge-1'] = [
+        {
+          id: 'seelsorge-1-1',
+          name: 'Hoffnungsträger',
+          text: 'Dieses Gedicht hat mir in schweren Zeiten geholfen. Danke fürs Teilen! 💚',
+          timestamp: 'vor 3h',
+          replies: []
+        },
+        {
+          id: 'seelsorge-1-2',
+          name: 'WeiseSeele',
+          text: 'Hesse verstand das Leben. Jede Stufe hat ihren Sinn ✨',
+          timestamp: 'vor 1h',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Der Panther" (seelsorge-2) - 1 Kommentar
+      postComments['seelsorge-2'] = [
+        {
+          id: 'seelsorge-2-1',
+          name: 'TiefesGefühl',
+          text: 'So traurig und doch so schön. Rilke konnte Emotionen einfangen wie kein anderer.',
+          timestamp: 'vor 4h',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Abschied" (seelsorge-3) - 2 Kommentare
+      postComments['seelsorge-3'] = [
+        {
+          id: 'seelsorge-3-1',
+          name: 'Trostspender',
+          text: 'Wunderschön. Manchmal braucht man Worte wie diese.',
+          timestamp: 'vor 5h',
+          replies: []
+        },
+        {
+          id: 'seelsorge-3-2',
+          name: 'HerzSchmerz',
+          text: 'Eichendorff hatte ein Gespür für die leisen Töne des Lebens 🍂',
+          timestamp: 'vor 3h',
+          replies: []
+        }
+      ];
+
+      localStorage.setItem('postComments', JSON.stringify(postComments));
+      localStorage.setItem('seelsorgeCommentsInit', 'true');
+      updateCommentCounts();
+    }
+
+    initializeSeelsorgeComments();
+    
+    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
+    updateCommentCounts();
+  </script>
+</body>
+</html>

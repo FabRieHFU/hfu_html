@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HFU Buddy – Forum</title>
+  <title>Forum – HFU Buddy</title>
   <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Inder', sans-serif;
       background:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
       min-height:100vh;
@@ -17,10 +20,8 @@
     body::before{
       content:"";
       position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
+      top:0;left:0;
+      width:100%;height:100%;
       background-image:url('Hintergrund.png');
       background-size:cover;
       background-position:center;
@@ -42,7 +43,7 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      padding:16px 16px;
+      padding:16px;
       min-height:56px;
       border-bottom:1px solid #D2C79C;
       background:rgba(231, 219, 181, 0.8);
@@ -52,21 +53,19 @@
       position:absolute;
       left:16px;
       height:20px;
-      width:auto;
       cursor:pointer;
     }
     .top-title{
       font-weight:bold;
-      font-size:22px;
-      color:#2F7F51;
+      font-size:24px;
+      color:#4A7856;
     }
     .notification-icon{
       position:absolute;
       right:20px;
       top:50%;
       transform:translateY(-50%);
-      height:28px;
-      width:auto;
+      height:30px;
       cursor:pointer;
       border-radius:6px;
       transition:all 0.2s ease;
@@ -83,6 +82,7 @@
       border:1px solid #D2C79C;
       border-radius:8px;
       padding:14px;
+      padding-bottom:50px;
       background:rgba(245, 240, 220, 0.75);
       backdrop-filter: blur(5px);
       box-shadow:0 2px 4px rgba(0,0,0,0.05);
@@ -99,7 +99,7 @@
     }
     .post-title{
       font-weight:bold;color:#2F5F3F;
-      font-size:19px;
+      font-size:20px;
     }
     .save-btn-top{
       border:none;background:none;
@@ -116,17 +116,20 @@
       background:rgba(47, 127, 81, 0.1);
     }
     .post-author{
-      font-size:14px;color:#4A6B51;margin-bottom:8px;
+      font-size:15px;color:#4A6B51;margin-bottom:4px;
+    }
+    .post-time{
+      font-size:13px;color:#7A8B81;margin-bottom:8px;
     }
     .post-text{
-      font-size:15px;line-height:1.6;
+      font-size:16px;line-height:1.6;
       margin-bottom:12px;color:#2F5F3F;
     }
     .post-actions{
       display:flex;
       justify-content:flex-end;
       align-items:center;
-      gap:4px;
+      gap:8px;
       padding-top:10px;
       border-top:1px solid #E7DBB5;
     }
@@ -139,16 +142,17 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      gap:2px;
     }
     .icon-btn:hover{
       transform:scale(1.15);
       background:rgba(47, 127, 81, 0.1);
     }
     .icon-small{
-      height:20px;width:auto;
+      height:22px;width:auto;
     }
-    .votes{
-      font-size:13px;color:#4A7856;
+    .votes, .comment-count{
+      font-size:14px;color:#4A7856;
       font-weight:bold;
       min-width:20px;
       text-align:center;
@@ -159,10 +163,10 @@
       margin:8px 0 12px;
     }
     .plus-circle{
-      width:48px;height:48px;border-radius:50%;
+      width:50px;height:50px;border-radius:50%;
       background:#4A7856;color:#E7DBB5;
       display:flex;justify-content:center;align-items:center;
-      font-size:28px;cursor:pointer;
+      font-size:30px;cursor:pointer;
       text-decoration:none;
       box-shadow:0 4px 6px rgba(0,0,0,0.2);
       transition:all 0.2s ease;
@@ -203,9 +207,7 @@
 <body>
   <div class="phone">
     <div class="top-bar">
-      <a href="index.html">
-        <img src="gback.png" alt="Zurück" class="back-icon">
-      </a>
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
       <div class="top-title">Forum</div>
       <a href="forum_benachrichtigungen.html">
         <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
@@ -213,8 +215,7 @@
     </div>
 
     <div class="content" id="posts-container">
-      <!-- Fester Beispiel-Post 1 -->
-      <div class="post" data-votes="0">
+      <div class="post" data-votes="0" data-post-id="post-1">
         <div class="post-header">
           <div class="post-title-area">
             <div class="post-title">Erlkönig Teil 1</div>
@@ -224,6 +225,7 @@
           </button>
         </div>
         <div class="post-author">von Johann</div>
+        <div class="post-time">vor 45min</div>
         <div class="post-text">
           Wer reitet so spät durch Nacht und Wind?<br>
           Es ist der Vater mit seinem Kind;<br>
@@ -231,18 +233,18 @@
           Er fasst ihn sicher, er hält ihn warm.
         </div>
         <div class="post-actions">
-          <a class="icon-btn" href="forum_kommentare.html">
+          <button class="icon-btn comment-btn">
             <img src="gkomm.png" alt="Kommentare" class="icon-small">
-          </a>
+            <span class="comment-count">0</span>
+          </button>
           <button class="icon-btn upvote-btn">
             <img src="gup.png" alt="Upvote" class="icon-small">
+            <span class="votes">0</span>
           </button>
-          <span class="votes">0</span>
         </div>
       </div>
 
-      <!-- Fester Beispiel-Post 2 -->
-      <div class="post" data-votes="0">
+      <div class="post" data-votes="0" data-post-id="post-2">
         <div class="post-header">
           <div class="post-title-area">
             <div class="post-title">Erlkönig Teil 2</div>
@@ -251,27 +253,29 @@
             <img src="gmerken.png" alt="Merken" class="icon-small">
           </button>
         </div>
-        <div class="post-author">von Wolfgang </div>
+        <div class="post-author">von Wolfgang</div>
+        <div class="post-time">vor 2h</div>
         <div class="post-text">
-          „Mein Sohn, was birgst du so bang dein Gesicht?“ –<br>
+          „Mein Sohn, was birgst du so bang dein Gesicht?" –<br>
           „Siehst, Vater, du den Erlkönig nicht?<br>
-          Den Erlenkönig mit Kron’ und Schweif?“ –<br>
-          „Mein Sohn, es ist ein Nebelstreif.“
+          Den Erlenkönig mit Kron' und Schweif?" –<br>
+          „Mein Sohn, es ist ein Nebelstreif."
         </div>
         <div class="post-actions">
-          <a class="icon-btn" href="forum_kommentare.html">
+          <button class="icon-btn comment-btn">
             <img src="gkomm.png" alt="Kommentare" class="icon-small">
-          </a>
+            <span class="comment-count">0</span>
+          </button>
           <button class="icon-btn upvote-btn">
             <img src="gup.png" alt="Upvote" class="icon-small">
+            <span class="votes">0</span>
           </button>
-          <span class="votes">0</span>
         </div>
       </div>
     </div>
 
     <div class="plus">
-      <a class="plus-circle" href="forum_posten.html">+</a>
+      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
     </div>
 
     <div class="bottom-bar">
@@ -288,89 +292,174 @@
   </div>
 
   <script>
-    const container = document.getElementById('posts-container');
+    // WICHTIG: Setze forumReferrer sofort beim Laden auf forum.html
+    sessionStorage.setItem('forumReferrer', 'forum.html');
+    
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'forum');
+      sessionStorage.setItem('forumReferrer', 'forum.html');
+    });
+    
+    // Fake-Kommentare für Forum initialisieren
+    function initializeForumComments() {
+      const initialized = localStorage.getItem('forumCommentsInit');
+      if(initialized === 'true') return;
+      
+      const existingComments = localStorage.getItem('postComments');
+      const postComments = existingComments ? JSON.parse(existingComments) : {};
+      
+      postComments["post-1"] = [
+        { id: 0, author: "LiteraturFan", text: "Eines der bekanntesten Gedichte überhaupt!", replies: [] },
+        { id: 1, author: "Goethe_Kenner", text: "Die Atmosphäre ist wirklich einzigartig.", replies: [] },
+        { id: 2, author: "SchülerHelfer", text: "Mussten wir auswendig lernen in der Schule", replies: [] }
+      ];
+      
+      postComments["post-2"] = [
+        { id: 0, author: "DeutschProfi", text: "Der Dialog ist so meisterhaft geschrieben", replies: [] },
+        { id: 1, author: "Balladenfan", text: "Die Spannung steigt mit jeder Zeile!", replies: [] }
+      ];
+      
+      localStorage.setItem("postComments", JSON.stringify(postComments));
+      localStorage.setItem('forumCommentsInit', 'true');
+    }
+    
+    initializeForumComments();
+    
+    const container = document.getElementById("posts-container");
 
-    // neue Posts aus sessionStorage laden
-    function loadNewPosts() {
-      const raw = sessionStorage.getItem('newPosts');
-      if (!raw) return;
-
-      let newPosts = [];
-      try { newPosts = JSON.parse(raw); } catch(e){ return; }
-
-      newPosts.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'post';
-        div.dataset.votes = '0';
-        div.innerHTML = `
-          <div class="post-title">${p.title}</div>
-          <div class="post-author">von ${p.name}</div>
-          <div class="post-text">${p.text}</div>
-          <div class="post-actions">
-            <button class="icon-btn save-btn">
-              <img src="gmerken.png" alt="Merken" class="icon-small">
-            </button>
-            <a class="icon-btn" href="forum_kommentare.html">
-              <img src="gkomm.png" alt="Kommentare" class="icon-small">
-            </a>
-            <button class="icon-btn upvote-btn">
-              <img src="gup.png" alt="Upvote" class="icon-small">
-            </button>
-            <span class="votes">0</span>
-          </div>
-        `;
-        container.insertBefore(div, container.firstChild);
-      });
+    // Neue Posts laden (nur für diese Seite oder Posts ohne sourcePage)
+    const newPostsRaw = sessionStorage.getItem('newPosts');
+    if(newPostsRaw) {
+      try {
+        const newPosts = JSON.parse(newPostsRaw);
+        newPosts.forEach((p, index) => {
+          if(p.sourcePage === 'forum' || !p.sourcePage) {
+            const postId = 'new-forum-' + index;
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.dataset.postId = postId;
+            newPost.dataset.votes = '0';
+            newPost.innerHTML = `
+              <div class="post-header">
+                <div class="post-title-area">
+                  <div class="post-title">${p.title || 'Neuer Post'}</div>
+                </div>
+                <button class="icon-btn save-btn-top save-btn">
+                  <img src="gmerken.png" alt="Merken" class="icon-small">
+                </button>
+              </div>
+              <div class="post-author">von ${p.name || 'Anonym'}</div>
+              <div class="post-time">vor 1min</div>
+              <div class="post-text">${p.text}</div>
+              <div class="post-actions">
+                <button class="icon-btn comment-btn">
+                  <img src="gkomm.png" alt="Kommentare" class="icon-small">
+                  <span class="comment-count">0</span>
+                </button>
+                <button class="icon-btn upvote-btn">
+                  <img src="gup.png" alt="Upvote" class="icon-small">
+                  <span class="votes">0</span>
+                </button>
+              </div>
+            `;
+            container.insertBefore(newPost, container.firstChild);
+          }
+        });
+      } catch(e) {}
     }
 
-    loadNewPosts();
+    document.querySelectorAll(".comment-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const post = this.closest(".post");
+        const postId = post.dataset.postId;
+        if(postId) {
+          localStorage.setItem("currentPostId", postId);
+          // Setze forum.html als Referrer für Zurück-Navigation
+          sessionStorage.setItem('forumReferrer', 'forum.html');
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = "forum_kommentare.html";
+        }
+      });
+    });
 
-    // Upvotes
-    const posts = Array.from(container.querySelectorAll('.post'));
+    const posts = Array.from(container.querySelectorAll(".post"));
     posts.forEach(post => {
-      const btn = post.querySelector('.upvote-btn');
-      const votesSpan = post.querySelector('.votes');
-      btn.addEventListener('click', () => {
-        let votes = parseInt(post.dataset.votes || '0', 10);
-        votes++;
-        post.dataset.votes = votes;
-        votesSpan.textContent = votes;
-        const sorted = posts.slice().sort(
-          (a,b)=>parseInt(b.dataset.votes||'0',10)-parseInt(a.dataset.votes||'0',10)
-        );
-        sorted.forEach(p=>container.appendChild(p));
-      });
-    });
-
-    // Merken
-    function savePostData(title, author, text){
-      let saved=[];
-      const raw=sessionStorage.getItem('savedPosts');
-      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} }
-      saved.push({title,author,text});
-      sessionStorage.setItem('savedPosts',JSON.stringify(saved));
-    }
-    container.querySelectorAll('.post').forEach(post=>{
-      const saveBtn=post.querySelector('.save-btn');
-      saveBtn.addEventListener('click',()=>{
-        const title=post.querySelector('.post-title').innerHTML;
-        const author=post.querySelector('.post-author').innerHTML;
-        const text=post.querySelector('.post-text').innerHTML;
-        savePostData(title,author,text);
-        alert('Post gespeichert (bis zum Refresh).');
-      });
-    });
-  </script>
-  
-  <script>
-    // Benachrichtigungs-Icon aktualisieren
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('hasNotifications');
-      if(saved === 'true') {
-        const icon = document.querySelector('.notification-icon');
-        if(icon) icon.src = 'punkt.png';
+      const btn = post.querySelector(".upvote-btn");
+      const votesSpan = post.querySelector(".votes");
+      if(btn && votesSpan) {
+        btn.addEventListener("click", () => {
+          let votes = parseInt(post.dataset.votes || "0", 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          const sorted = posts.slice().sort(
+            (a,b)=>parseInt(b.dataset.votes||"0",10)-parseInt(a.dataset.votes||"0",10)
+          );
+          sorted.forEach(p=>container.appendChild(p));
+        });
       }
     });
+
+    function savePostData(title, author, text, postId){
+      let saved=[];
+      const raw=sessionStorage.getItem("savedPosts");
+      if(raw){ try{saved=JSON.parse(raw);}catch(e){saved=[];} }
+      saved.push({title,author,text,postId});
+      sessionStorage.setItem("savedPosts",JSON.stringify(saved));
+    }
+    
+    container.querySelectorAll(".post .save-btn").forEach(saveBtn=>{
+      saveBtn.addEventListener("click",function(){
+        const post = this.closest(".post");
+        const title=post.querySelector(".post-title").innerHTML;
+        const author=post.querySelector(".post-author").innerHTML;
+        const text=post.querySelector(".post-text").innerHTML;
+        const postId=post.dataset.postId;
+        savePostData(title,author,text,postId);
+        alert("Post gespeichert!");
+      });
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("hasNotifications");
+      if(saved === "true") {
+        const icon = document.querySelector(".notification-icon");
+        if(icon) icon.src = "punkt.png";
+      }
+      
+      updateCommentCounts();
+    });
+    
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem("postComments");
+      if(!postCommentsRaw) return;
+      
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        document.querySelectorAll(".post").forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector(".comment-count");
+            if(countSpan) {
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies);
+        }
+      });
+      return total;
+    }
+    
+    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
+    updateCommentCounts();
   </script>
 </body>
 </html>

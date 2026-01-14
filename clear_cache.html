@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cache löschen</title>
+  <link rel="icon" type="image/x-icon" href="logo.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #E7DBB5;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 { color: #4A7856; }
+    p { font-size: 18px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ Cache wurde gelöscht!</h1>
+    <p>Alle gespeicherten Daten wurden entfernt.</p>
+    <p>Du wirst gleich zur Startseite weitergeleitet...</p>
+  </div>
+  <script>
+    // Alle localStorage und sessionStorage Daten löschen
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Nach 2 Sekunden zur Startseite
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 2000);
+  </script>
+</body>
+</html>

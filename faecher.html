@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fächer</title>
+  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inder&display=swap" rel="stylesheet">
+  <style>
+    /* ========== GLOBAL STYLES ========== */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inder', sans-serif;
+      background:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;
+      position:relative;
+    }
+    /* Hintergrundbild mit 30% Transparenz */
+    body::before{
+      content:"";
+      position:fixed;
+      top:0;left:0;width:100%;height:100%;
+      background-image:url('Hintergrund.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0.3;
+      z-index:0;
+    }
+    
+    /* ========== PHONE CONTAINER ========== */
+    /* iPhone-ähnlicher Container (375x667px) */
+    .phone{
+      width:100%;max-width:375px;
+      height:100vh;max-height:667px;
+      background:transparent;
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:relative;z-index:1;
+    }
+    
+    /* ========== TOP BAR (Navigation oben) ========== */
+    .top-bar{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 16px;
+      min-height:56px;
+      border-bottom:1px solid #D2C79C;
+      background:rgba(231, 219, 181, 0.8);
+      backdrop-filter: blur(10px); /* Glassmorphism-Effekt */
+    }
+    .back-icon{
+      position:absolute;left:16px;
+      height:20px;width:auto;cursor:pointer;
+    }
+    .top-title{
+      font-weight:bold;font-size:22px;color:#4A7856;
+    }
+    /* Benachrichtigungsglocke oben rechts */
+    .notification-icon{
+      position:absolute;right:20px;top:50%;
+      transform:translateY(-50%);
+      height:28px;width:auto;cursor:pointer;
+      border-radius:6px;transition:all 0.2s ease;
+    }
+    .notification-icon:hover{
+      transform:translateY(-50%) scale(1.1);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    
+    /* ========== CONTENT AREA (scrollbare Post-Liste) ========== */
+    .content{
+      flex:1;padding:16px;overflow-y:auto;
+    }
+    
+    /* ========== POST STYLES ========== */
+    /* Einzelner Post-Container mit Glassmorphism */
+    .post{
+      margin-bottom:16px;
+      border:1px solid #D2C79C;
+      border-radius:8px;
+      padding:14px;
+      background:rgba(245, 240, 220, 0.75);
+      backdrop-filter: blur(5px);
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      position:relative;
+    }
+    .post-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:6px;
+    }
+    .post-title-area{
+      flex:1;
+    }
+    .post-title{
+      font-weight:bold;color:#2F5F3F;
+      font-size:19px;
+    }
+    .save-btn-top{
+      border:none;background:none;
+      cursor:pointer;
+      padding:4px;
+      transition:all 0.2s ease;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .save-btn-top:hover{
+      transform:scale(1.15);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .post-author{
+      font-size:14px;color:#4A6B51;margin-bottom:4px;
+    }
+    .post-time{
+      font-size:12px;color:#7A8B81;margin-bottom:8px;
+    }
+    .post-text{
+      font-size:15px;line-height:1.6;
+      margin-bottom:12px;color:#2F5F3F;
+      white-space: pre-line; /* Zeilenumbrüche erhalten */
+    }
+    /* Container für Kommentar- und Upvote-Buttons (unten rechts im Post) */
+    .post-actions{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:8px;
+      padding-top:10px;
+      border-top:1px solid #E7DBB5;
+    }
+    /* Einzelner Action-Button (Kommentar/Upvote) */
+    .icon-btn{
+      border:none;background:none;
+      cursor:pointer;
+      padding:2px;
+      transition:all 0.2s ease;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:2px;
+    }
+    .icon-btn:hover{
+      transform:scale(1.15);
+      background:rgba(47, 127, 81, 0.1);
+    }
+    .icon-small{
+      height:20px;width:auto;
+    }
+    /* Upvote-Zahlen und Kommentar-Zahlen (beide fett) */
+    .votes, .comment-count{
+      font-size:13px;color:#4A7856;
+      font-weight:bold;
+      min-width:20px;
+      text-align:center;
+      padding:0 2px;
+    }
+    
+    /* ========== PLUS BUTTON (Neuer Post erstellen) ========== */
+    .plus{
+      display:flex;justify-content:center;
+      margin:8px 0 12px;
+    }
+    /* Grüner kreisförmiger Plus-Button */
+    .plus-circle{
+      width:48px;height:48px;border-radius:50%;
+      background:#4A7856;color:#E7DBB5;
+      display:flex;justify-content:center;align-items:center;
+      font-size:28px;cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 4px 6px rgba(0,0,0,0.2);
+      transition:all 0.2s ease;
+    }
+    .plus-circle:hover{
+      background:#5A8866;
+      transform:scale(1.05);
+    }
+    
+    /* ========== BOTTOM BAR (Navigation unten) ========== */
+    .bottom-bar{
+      height:75px;
+      background:rgba(231, 219, 181, 0.75);
+      backdrop-filter: blur(10px);
+      display:flex;justify-content:space-evenly;
+      align-items:center;
+      border-top:1px solid #D2C79C;
+      padding:12px 0;
+    }
+    .bottom-bar a{ 
+      text-decoration:none;padding:8px;
+      border-radius:8px;transition:all 0.2s ease;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .bottom-bar a:hover{
+      background:rgba(47, 127, 81, 0.1);
+      transform:scale(1.1);
+    }
+    .nav-icon{height:36px;width:auto;}
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="top-bar">
+      <img src="gback.png" alt="Zurück" class="back-icon" onclick="window.location.href='index.html'" style="cursor:pointer;">
+      <div class="top-title">Fächer</div>
+      <a href="forum_benachrichtigungen.html">
+        <img src="gmeldung.png" alt="Benachrichtigungen" class="notification-icon">
+      </a>
+    </div>
+
+    <div class="content">
+      <div class="post" data-votes="23" data-post-id="faecher-1">
+        <div class="post-header">
+          <div class="post-title-area">
+            <div class="post-title">Der Zauberlehrling</div>
+          </div>
+          <button class="icon-btn save-btn-top save-btn">
+            <img src="gmerken.png" alt="Merken" class="icon-small">
+          </button>
+        </div>
+        <div class="post-author">von Goethe_Fan</div>
+        <div class="post-time">vor 2h</div>
+        <div class="post-text">Hat der alte Hexenmeister
+sich doch einmal wegbegeben!
+Und nun sollen seine Geister
+auch nach meinem Willen leben.
+Seine Wort und Werke
+merkt ich und den Brauch,
+und mit Geistesstärke
+tu ich Wunder auch.</div>
+        <div class="post-actions">
+          <button class="icon-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="icon-small">
+            <span class="comment-count">2</span>
+          </button>
+          <button class="icon-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="icon-small">
+            <span class="votes">23</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="42" data-post-id="faecher-2">
+        <div class="post-header">
+          <div class="post-title-area">
+            <div class="post-title">Die Bürgschaft</div>
+          </div>
+          <button class="icon-btn save-btn-top save-btn">
+            <img src="gmerken.png" alt="Merken" class="icon-small">
+          </button>
+        </div>
+        <div class="post-author">von Klassiker123</div>
+        <div class="post-time">vor 5h</div>
+        <div class="post-text">Zu Dionys, dem Tyrannen, schlich
+Damon, den Dolch im Gewande;
+Ihn schlugen die Häscher in Bande.
+"Was wolltest du mit dem Dolche, sprich!"
+Entgegnet ihm finster der Wüterich.</div>
+        <div class="post-actions">
+          <button class="icon-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="icon-small">
+            <span class="comment-count">1</span>
+          </button>
+          <button class="icon-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="icon-small">
+            <span class="votes">42</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post" data-votes="31" data-post-id="faecher-3">
+        <div class="post-header">
+          <div class="post-title-area">
+            <div class="post-title">Abendlied</div>
+          </div>
+          <button class="icon-btn save-btn-top save-btn">
+            <img src="gmerken.png" alt="Merken" class="icon-small">
+          </button>
+        </div>
+        <div class="post-author">von LyrikLover</div>
+        <div class="post-time">vor 1d</div>
+        <div class="post-text">Der Mond ist aufgegangen,
+Die goldnen Sternlein prangen
+Am Himmel hell und klar;
+Der Wald steht schwarz und schweiget,
+Und aus den Wiesen steiget
+Der weiße Nebel wunderbar.</div>
+        <div class="post-actions">
+          <button class="icon-btn comment-btn">
+            <img src="gkomm.png" alt="Kommentare" class="icon-small">
+            <span class="comment-count">3</span>
+          </button>
+          <button class="icon-btn upvote-btn">
+            <img src="gup.png" alt="Upvote" class="icon-small">
+            <span class="votes">31</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="plus">
+      <a class="plus-circle" href="forum_posten.html" id="plusBtn">+</a>
+    </div>
+
+    <div class="bottom-bar">
+      <a href="einstellungen.html">
+        <img src="geinstellungen.png" alt="Einstellungen" class="nav-icon">
+      </a>
+      <a href="index.html">
+        <img src="ghome.png" alt="Home" class="nav-icon">
+      </a>
+      <a href="forum_merken.html">
+        <img src="gmerken.png" alt="Merken" class="nav-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    /* ========== EVENT LISTENER: Plus-Button ========== */
+    // Speichere Seitenquelle 'faecher' wenn Plus-Button geklickt wird
+    // Dies wird in forum_posten.html verwendet um Posts der richtigen Seite zuzuordnen
+    document.getElementById('plusBtn').addEventListener('click', function(e) {
+      localStorage.setItem('postSourcePage', 'faecher');
+      sessionStorage.setItem('forumReferrer', 'faecher.html');
+    });
+    
+    /* ========== KEINE FAKE-KOMMENTARE MEHR ========== */
+    // Nur echte, selbst gepostete Kommentare werden gezählt
+    // Diese bleiben bis zum Cache-Clean erhalten
+    
+    const container = document.querySelector('.content');
+    
+    /* ========== NEUE POSTS LADEN ========== */
+    // Lade benutzerdefinierte Posts aus sessionStorage
+    // Zeige nur Posts an, die auf 'faecher' erstellt wurden (sourcePage Filter)
+    const newPostsRaw = sessionStorage.getItem('newPosts');
+    if(newPostsRaw) {
+      try {
+        const newPosts = JSON.parse(newPostsRaw);
+        // Durchlaufe alle Posts und zeige nur die für 'faecher' an
+        newPosts.forEach((p, index) => {
+          if(p.sourcePage === 'faecher') {
+            // Erstelle eindeutige Post-ID
+            const postId = 'new-faecher-' + index;
+            // Erstelle neues Post-Element
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.dataset.postId = postId; // Für Kommentarzuordnung
+            newPost.dataset.votes = '0'; // Initiale Upvotes
+            // HTML-Struktur für den Post
+            newPost.innerHTML = `
+              <div class="post-header">
+                <div class="post-title-area">
+                  <div class="post-title">${p.title || 'Neuer Post'}</div>
+                </div>
+                <button class="icon-btn save-btn-top">
+                  <img src="gmerken.png" alt="Merken" class="icon-small">
+                </button>
+              </div>
+              <div class="post-author">von ${p.name || 'Anonym'}</div>
+              <div class="post-time">vor 1min</div>
+              <div class="post-text">${p.text}</div>
+              <div class="post-actions">
+                <button class="icon-btn comment-btn">
+                  <img src="gkomm.png" alt="Kommentare" class="icon-small">
+                  <span class="comment-count">0</span>
+                </button>
+                <button class="icon-btn upvote-btn">
+                  <img src="gup.png" alt="Upvote" class="icon-small">
+                  <span class="votes">0</span>
+                </button>
+              </div>
+            `;
+            // Füge Post am Anfang der Liste ein (neueste zuerst)
+            container.insertBefore(newPost, container.firstChild);
+          }
+        });
+      } catch(e) {}
+    }
+    
+    /* ========== EVENT LISTENER: Kommentar-Buttons ========== */
+    // Klick auf Kommentar-Button öffnet Kommentarseite für diesen Post
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const post = this.closest('.post');
+        const postId = post.dataset.postId;
+        if(postId) {
+          // Speichere Post-ID für Kommentarseite
+          localStorage.setItem('currentPostId', postId);
+          // Speichere aktuelle Seite als Referrer für korrekte Zurück-Navigation
+          sessionStorage.setItem('forumReferrer', 'faecher.html');
+          // Lösche fromNotification-Flag, da wir direkt vom Forum kommen
+          sessionStorage.removeItem('fromNotification');
+          window.location.href = 'forum_kommentare.html';
+        }
+      });
+    });
+    
+    /* ========== UPVOTE-FUNKTIONALITÄT ========== */
+    // Hole alle Posts und aktiviere Upvote-System mit automatischer Sortierung
+    const posts = Array.from(container.querySelectorAll('.post'));
+    posts.forEach(post => {
+      // Initialisiere votes falls nicht vorhanden
+      if(!post.dataset.votes) {
+        post.dataset.votes = post.querySelector('.votes') ? post.querySelector('.votes').textContent : '0';
+      }
+      
+      const btn = post.querySelector('.upvote-btn');
+      const votesSpan = post.querySelector('.votes');
+      if(btn && votesSpan) {
+        btn.addEventListener('click', () => {
+          // Erhöhe Upvote-Zahl
+          let votes = parseInt(post.dataset.votes || '0', 10);
+          votes++;
+          post.dataset.votes = votes;
+          votesSpan.textContent = votes;
+          
+          // Sortiere Posts nach Upvotes (höchste zuerst)
+          const sorted = posts.slice().sort(
+            (a,b) => parseInt(b.dataset.votes||'0',10) - parseInt(a.dataset.votes||'0',10)
+          );
+          sorted.forEach(p => container.appendChild(p));
+        });
+      }
+    });
+
+    /* ========== MERKEN/BOOKMARK-FUNKTIONALITÄT ========== */
+    // Speichere Post-Daten in sessionStorage wenn Bookmark geklickt
+    function savePostData(author, text) {
+      let saved = [];
+      const raw = sessionStorage.getItem('savedPosts');
+      if(raw) { try { saved = JSON.parse(raw); } catch(e) { saved = []; } }
+      saved.push({title: 'Fächer Post', author, text});
+      sessionStorage.setItem('savedPosts', JSON.stringify(saved));
+    }
+    
+    // Event Listener für alle Bookmark-Icons
+    container.querySelectorAll('.post').forEach(post => {
+      const saveBtn = post.querySelector('.save-btn-top');
+      if(saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          const author = post.querySelector('.post-author').textContent.replace('von ', '');
+          const text = post.querySelector('.post-text').textContent;
+          savePostData(author, text);
+          alert('Post gespeichert!');
+        });
+      }
+    });
+
+    /* ========== BENACHRICHTIGUNGS-ANZEIGE ========== */
+    // Zeige roten Punkt auf Benachrichtigungsglocke wenn Benachrichtigungen vorhanden
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('hasNotifications');
+      if(saved === 'true') {
+        const icon = document.querySelector('.notification-icon');
+        if(icon) icon.src = 'punkt.png'; // Wechsel zu Icon mit rotem Punkt
+      }
+      
+      // Aktualisiere Kommentar-Zahlen bei Seitenladung
+      updateCommentCounts();
+    });
+    
+    /* ========== KOMMENTAR-ZAHLEN AKTUALISIEREN ========== */
+    // Zähle alle Kommentare (inkl. verschachtelte Antworten) für jeden Post
+    function updateCommentCounts() {
+      const postCommentsRaw = localStorage.getItem('postComments');
+      if(!postCommentsRaw) return;
+      
+      try {
+        const postComments = JSON.parse(postCommentsRaw);
+        // Gehe durch alle Posts und aktualisiere comment-count
+        document.querySelectorAll('.post').forEach(post => {
+          const postId = post.dataset.postId;
+          if(postId && postComments[postId]) {
+            const countSpan = post.querySelector('.comment-count');
+            if(countSpan) {
+              // Zähle rekursiv alle Kommentare und Antworten
+              countSpan.textContent = countAllComments(postComments[postId]);
+            }
+          }
+        });
+      } catch(e) {}
+    }
+    
+    /* ========== REKURSIVE KOMMENTAR-ZÄHLUNG ========== */
+    // Zählt Kommentare inkl. aller verschachtelten Antworten (Reddit-Style)
+    function countAllComments(comments) {
+      let total = comments.length;
+      comments.forEach(c => {
+        if(c.replies && c.replies.length > 0) {
+          total += countAllComments(c.replies); // Rekursiv Antworten zählen
+        }
+      });
+      return total;
+    }
+
+    /* ========== FAKE KOMMENTARE INITIALISIEREN (nur beim ersten Laden) ========== */
+    function initializeFakeComments() {
+      const initialized = localStorage.getItem('fakeCommentsInitialized');
+      if(initialized === 'true') return; // Nur einmal ausführen
+
+      const postComments = {};
+      
+      // Fake Kommentare für "Der Zauberlehrling" (faecher-1) - 2 Kommentare
+      postComments['faecher-1'] = [
+        {
+          id: 'fake-1-1',
+          name: 'LiteraturNerd',
+          text: 'Genial! Diese Ballade ist zeitlos. Die Dynamik ist unglaublich!',
+          timestamp: 'vor 1h',
+          replies: []
+        },
+        {
+          id: 'fake-1-2',
+          name: 'PoesieHerz',
+          text: 'Ich liebe den Rhythmus! Man kann förmlich das Chaos spüren.',
+          timestamp: 'vor 30min',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Die Bürgschaft" (faecher-2) - 1 Kommentar
+      postComments['faecher-2'] = [
+        {
+          id: 'fake-2-1',
+          name: 'SchillerLiebe',
+          text: 'Freundschaft und Treue in Perfektion! Schiller at his best.',
+          timestamp: 'vor 3h',
+          replies: []
+        }
+      ];
+
+      // Fake Kommentare für "Abendlied" (faecher-3) - 3 Kommentare
+      postComments['faecher-3'] = [
+        {
+          id: 'fake-3-1',
+          name: 'NaturPoet',
+          text: 'So friedlich und beruhigend. Perfekt vor dem Schlafengehen.',
+          timestamp: 'vor 4h',
+          replies: []
+        },
+        {
+          id: 'fake-3-2',
+          name: 'LyrikSeele',
+          text: 'Matthias Claudius war ein Meister der stillen Töne ✨',
+          timestamp: 'vor 2h',
+          replies: []
+        },
+        {
+          id: 'fake-3-3',
+          name: 'Abendstern',
+          text: 'Wunderschöne Verse. Danke fürs Teilen! 🌙',
+          timestamp: 'vor 1h',
+          replies: []
+        }
+      ];
+
+      localStorage.setItem('postComments', JSON.stringify(postComments));
+      localStorage.setItem('fakeCommentsInitialized', 'true');
+      
+      // Aktualisiere die Kommentarzahlen auf der Seite
+      updateCommentCounts();
+    }
+
+    // Initialisiere Fake-Kommentare beim Laden
+    initializeFakeComments();
+    
+    // Aktualisiere Kommentarzahlen bei jedem Seitenaufruf
+    updateCommentCounts();
+  </script>
+</body>
+</html>
